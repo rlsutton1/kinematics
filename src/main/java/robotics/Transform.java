@@ -2,7 +2,6 @@ package robotics;
 
 import java.text.NumberFormat;
 
-import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 public class Transform

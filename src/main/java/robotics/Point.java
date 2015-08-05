@@ -6,19 +6,19 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 public class Point
 {
 
-	Vector3D point;
+	private Vector3D point;
 	private Frame frame;
 
-	Point(Frame frame, double x, double y, double z)
+	public Point(Frame frame, double x, double y, double z)
 	{
 		this.frame = frame;
-		point = new Vector3D(x, y, z);
+		this.point = new Vector3D(x, y, z);
 	}
 
 	@Override 
 	public String toString()
 	{
-		return point.getX()+" "+point.getY()+" "+point.getZ();
+		return getPoint().getX()+" "+getPoint().getY()+" "+getPoint().getZ();
 	}
 
 	public Frame getFrame()
@@ -33,37 +33,41 @@ public class Point
 
 	public Point subtract(Transform transform)
 	{
-		return transform.subtract(point);
+		return transform.subtract(getPoint());
 	}
 
 	public Point rotate(Rotation rotation)
 	{
-		return new Point(rotation.applyTo(point));
+		return new Point(rotation.applyTo(getPoint()));
 	}
 
 	public Point invRotate(Rotation rotation)
 	{
-		return new Point(rotation.applyInverseTo(point));
+		return new Point(rotation.applyInverseTo(getPoint()));
 	}
 
 	public Point add(Transform transform)
 	{
-		return transform.add(point);
+		return transform.add(getPoint());
 	}
 
 	public double getX()
 	{
-		return point.getX();
+		return getPoint().getX();
 	}
 
 	public double getY()
 	{
-		return point.getY();
+		return getPoint().getY();
 	}
 
 	public double getZ()
 	{
-		return point.getZ();
+		return getPoint().getZ();
 	}
 
+	public Vector3D getPoint()
+	{
+		return point;
+	}
 }
