@@ -1,8 +1,7 @@
 package robotics;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
-import org.apache.commons.math3.geometry.VectorFormat;
 import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
 import org.apache.commons.math3.geometry.euclidean.threed.RotationOrder;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
@@ -384,7 +383,7 @@ public class ArmTest
 
 
 				// calculate distance between armBase and wrist
-				double extend = Vector3D.distance(armBase, endPoint.point);
+				double extend = Vector3D.distance(armBase, endPoint.getPoint());
 				// double extend = new Transform(endPoint,
 				// armBase).getDistance();
 
