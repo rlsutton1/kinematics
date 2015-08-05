@@ -8,7 +8,7 @@ public class ServoAngleToPwmCalculator
 	private double min;
 	private double max;
 
-	ServoAngleToPwmCalculator(double minPwm, double maxPwm, double minAngle,
+	public ServoAngleToPwmCalculator(double minPwm, double maxPwm, double minAngle,
 			double maxAngle)
 	{
 		double minAngleR = Math.toRadians(minAngle);
@@ -33,7 +33,7 @@ public class ServoAngleToPwmCalculator
 		c = minPwm - (minAngleR * m);
 	}
 
-	double getPwmValue(double angleX)
+	public double getPwmValue(double angleX)
 	{
 		double pwm = (m * angleX) + c;
 		return Math.max(min, Math.min(pwm, max));

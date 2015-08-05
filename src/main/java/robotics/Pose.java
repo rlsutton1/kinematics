@@ -65,7 +65,7 @@ public class Pose
 	 * @param point
 	 * @return
 	 */
-	Point applyPose(Point point)
+	public Point applyPose(Point point)
 	{
 		return point.add(transform).invRotate(getRotation());
 
@@ -89,6 +89,21 @@ public class Pose
 	public Point getPoint(Frame frame)
 	{
 		return applyPose(new Point(frame, 0, 0, 0));
+	}
+
+	public double getX()
+	{
+		return transform.transform.getX();
+	}
+
+	public double getY()
+	{
+		return transform.transform.getY();
+	}
+
+	public double getZ()
+	{
+		return transform.transform.getZ();
 	}
 
 }

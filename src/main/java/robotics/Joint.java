@@ -11,7 +11,7 @@ public class Joint extends Pose
 	private Double currentJointAngle;
 	private String name;
 
-	Joint(String name, Axis axisOfRotation, Pose pose, Double currentJointAngle)
+	public Joint(String name, Axis axisOfRotation, Pose pose, Double currentJointAngle)
 	{
 		super(name,pose);
 		this.name = name;
@@ -27,12 +27,12 @@ public class Joint extends Pose
 	
 
 	/**
-	 * return the rotation for this joint for the given angle
+	 * sets the rotation for this joint for the given angle
 	 * 
 	 * @param angle
 	 * @return
 	 */
-	protected void setJointAngle(double angle)
+	public void setJointAngle(double angle)
 	{
 		currentJointAngle = angle;
 		rotation = new Rotation(RotationOrder.XYZ, angles[0]

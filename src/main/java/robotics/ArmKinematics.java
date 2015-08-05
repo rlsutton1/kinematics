@@ -18,6 +18,7 @@ public class ArmKinematics
 
 	private Frame frame;
 
+	@SuppressWarnings("unused")
 	private Pose pose;
 
 	public ArmKinematics(Frame frame, Pose pose)

@@ -58,14 +58,14 @@ public class MeArmServoCalculator extends MeArmKinematics
 
 	}
 
-	public void setArmBasePwm(double radians)
+	public void setArmBaseAngle(double radians)
 	{
 		getJoint(ARM_BASE_JOINT).setJointAngle(radians);
 		;
 
 	}
 
-	public void setArmCenterPwm(double radians)
+	public void setArmCenterAngle(double radians)
 	{
 		getJoint(ARM_CENTER_JOINT).setJointAngle(radians);
 

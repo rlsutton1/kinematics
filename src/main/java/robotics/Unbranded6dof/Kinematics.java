@@ -1,17 +1,27 @@
-package robotics;
+package robotics.Unbranded6dof;
 
 import static org.junit.Assert.assertTrue;
 
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
-public class MeArmKinematics extends ArmKinematics
+import robotics.ArmKinematics;
+import robotics.Axis;
+import robotics.Frame;
+import robotics.InvKinematics;
+import robotics.Joint;
+import robotics.Link;
+import robotics.Point;
+import robotics.Pose;
+import robotics.Transform;
+
+public class Kinematics extends ArmKinematics
 {
 
-	protected static final String ARM_CENTER_JOINT = "Arm Center";
-	protected static final String ARM_BASE_JOINT = "Arm Base";
+	protected static final String ARM_ELBOW = "Arm Elbow";
+	protected static final String ARM_SHOULDER = "Arm Shoulder";
 	protected static final String TURRET_JOINT = "Turret";
 
-	public MeArmKinematics()
+	public Kinematics()
 	{
 		super(Frame.getWorldFrame(), new Pose(0, 0, 0, 0, 0, 0));
 
@@ -21,14 +31,15 @@ public class MeArmKinematics extends ArmKinematics
 		// rotation of the joint is around the z-axis of the link and the x-axis
 		// is parelle to the link
 
-		add(new Link("Base to Servo", 0, 0, 20, 0, 0, 0));
+		add(new Link("Base to Servo", 0, 0, 40, 0, 0, 0));
 		add(new Joint(TURRET_JOINT, Axis.YAW, null, 0.0));
-		add(new Link("Turret to arm Base", 0, 20, 20, 0, 0, 0));
-		add(new Joint(ARM_BASE_JOINT, Axis.PITCH, null, 0.0));
-		add(new Link("Arm segment 1", 0, 0, 81, 0, 0, 0));
-		add(new Joint(ARM_CENTER_JOINT, Axis.PITCH, null, 0.0));
-		add(new Link("Arm segment 2", 0, 0, 81, 0, 0, 0));
+		add(new Link("Turret to arm Base", 0, 20, 0, 0, 0, 0));
+		add(new Joint(ARM_SHOULDER, Axis.PITCH, null, 0.0));
+		add(new Link("Upper Arm", 0, 0, 100, 0, 0, 0));
+		add(new Joint(ARM_ELBOW, Axis.PITCH, null, 0.0));
+		add(new Link("Forearm", 0, 0, 100, 0, 0, 0));
 		add(new Joint("Wrist", Axis.PITCH, null, 0.0));
+		add(new Link("Gripper Tip", 0, -20, 130, 0, 0, 0));
 
 		setInvKinematics(getInvKinematics());
 
@@ -38,11 +49,11 @@ public class MeArmKinematics extends ArmKinematics
 	{
 		Vector3D endPoint = arm.getEndEffectorPose();
 
-		double xdiff = Math.abs(pose.transform.transform.getX()
+		double xdiff = Math.abs(pose.getX()
 				- endPoint.getX());
-		double ydiff = Math.abs(pose.transform.transform.getY()
+		double ydiff = Math.abs(pose.getY()
 				- endPoint.getY());
-		double zdiff = Math.abs(pose.transform.transform.getZ()
+		double zdiff = Math.abs(pose.getZ()
 				- endPoint.getZ());
 		// System.out.println(pose.transform + " " + endPoint);
 		assertTrue(xdiff < 3 && ydiff < 3 && zdiff < 3);
@@ -66,7 +77,7 @@ public class MeArmKinematics extends ArmKinematics
 				double turretAngle = Math.atan2(x, y);
 
 				arm.getJoint(TURRET_JOINT).setJointAngle(turretAngle);
-				Vector3D armBase = arm.getPoint(ARM_BASE_JOINT);
+				Vector3D armBase = arm.getPoint(ARM_SHOULDER);
 
 				// calculate distance between armBase and wrist
 				double extend = Vector3D.distance(armBase, endPoint.getPoint());
@@ -86,8 +97,8 @@ public class MeArmKinematics extends ArmKinematics
 				double baseAngle = Math.atan2(x, z) - (midArmAngle / 2.0);
 
 				// set joint angles !!
-				arm.getJoint(ARM_BASE_JOINT).setJointAngle(baseAngle);
-				arm.getJoint(ARM_CENTER_JOINT).setJointAngle(midArmAngle);
+				arm.getJoint(ARM_SHOULDER).setJointAngle(baseAngle);
+				arm.getJoint(ARM_ELBOW).setJointAngle(midArmAngle);
 
 			}
 
