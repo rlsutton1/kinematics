@@ -32,6 +32,13 @@ public class ServoAngleToPwmCalculator
 
 		c = minPwm - (minAngleR * m);
 	}
+	
+	public ServoAngleToPwmCalculator(iMotor motor)
+	{
+		this(motor.getMinPwm(), motor.getMaxPwm(), motor.getMinAngle(),
+			motor.getMaxAngle());
+	}
+
 
 	public double getPwmValue(double angleX)
 	{
