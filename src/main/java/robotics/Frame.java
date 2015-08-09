@@ -3,9 +3,9 @@ package robotics;
 public class Frame
 {
 
-	Frame parentFrame;
-	Pose pose;
-	String name;
+	private Frame parentFrame;
+	private Pose pose;
+	private String name;
 	
 
 	Frame(String name, Frame parentFrame, Pose pose)
@@ -13,11 +13,6 @@ public class Frame
 		this.name = name;
 		this.parentFrame = parentFrame;
 		this.pose = pose;
-	}
-
-	public Frame()
-	{
-		// TODO Auto-generated constructor stub
 	}
 
 	Point toParentFrame(Point point)
@@ -48,5 +43,10 @@ public class Frame
 	{
 		return worldFrame;
 		
+	}
+
+	public String getName()
+	{
+		return name;
 	}
 }
