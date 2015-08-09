@@ -6,6 +6,7 @@ public class Frame
 	Frame parentFrame;
 	Pose pose;
 	String name;
+	
 
 	Frame(String name, Frame parentFrame, Pose pose)
 	{

@@ -29,8 +29,7 @@ public class Joint extends Pose
 	/**
 	 * sets the rotation for this joint for the given angle
 	 * 
-	 * @param angle
-	 * @return
+	 * @param angle The Angle in radians to set the Joint angle to. 
 	 */
 	public void setJointAngle(double angle)
 	{

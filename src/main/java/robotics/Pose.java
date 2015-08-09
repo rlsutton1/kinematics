@@ -60,10 +60,10 @@ public class Pose
 	}
 
 	/**
-	 * convert the given point into
+	 * convert the given point into a Pose
 	 * 
-	 * @param point
-	 * @return
+	 * @param point The point of where the tip of the robot arm is to be positioned (Posed).
+	 * @return The Pose required to position the tip of the robot arm to the given 3D point.
 	 */
 	public Point applyPose(Point point)
 	{
