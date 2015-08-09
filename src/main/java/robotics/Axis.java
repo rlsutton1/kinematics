@@ -10,19 +10,20 @@ package robotics;
 public enum Axis
 {
 	/**
-	 * rotation about an axis running from nose to tail of a plane.
+	 * Rotation about the Y axis which is visualised as a plane 'rolling' around an axis running from nose to tail of a plane. 
+	 * 
 	 */
 	ROLL, 	
 	
 	/**
-	 * nose up or down about an axis running from wing to wing
+	 * Rotation about the X axis which is visualised as the plane's nose going up or down with the axis running from wing to wing
 	 */
 	PITCH, 
 	
 	/**
-	 * nose left or right about a vertical axis that pierces the aircraft body between the wings
+	 * Rotation about the X axis which is visualised as the plane's nose going left or right about a vertical axis that pierces the aircraft body between the wings
 	 */
-	YAW;		
+	YAW;
 
 	/**
 	 * returns the passed in angle if the Axis matches, otherwise returns 0

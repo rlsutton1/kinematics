@@ -1,4 +1,6 @@
-package robotics;
+package robotics.helpers;
+
+import robotics.iMotor;
 
 public class ServoAngleToPwmCalculator
 {

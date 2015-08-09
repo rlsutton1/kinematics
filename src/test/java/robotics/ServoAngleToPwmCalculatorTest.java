@@ -4,6 +4,9 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import robotics.helpers.ServoAngleToPwmCalculator;
+import robotics.meArm.MeArmServoCalculator;
+
 public class ServoAngleToPwmCalculatorTest
 {
 

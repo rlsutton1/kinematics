@@ -9,7 +9,7 @@ import java.util.Map.Entry;
 
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
-public class ArmKinematics
+public abstract class ArmKinematics
 {
 
 	private InvKinematics invKinematics;
@@ -27,13 +27,19 @@ public class ArmKinematics
 		this.pose = pose;
 	}
 
-	public void add(Pose pose)
+//	public void add(Pose pose)
+//	{
+//		segments.put(pose.getName(), pose);
+//
+//	}
+
+	public void add(LinkDefinition link)
 	{
-		segments.put(pose.getName(), pose);
+		segments.put(link.getName(), link);
 
 	}
 
-	public void add(Joint joint)
+	public void add(JointDefinition joint)
 	{
 		segments.put(joint.getName(), joint);
 
@@ -50,9 +56,9 @@ public class ArmKinematics
 		return frame;
 	}
 
-	public Vector3D getPoint(String string)
+	public Vector3D getPoint(JointDefinition jointDef)
 	{
-		Vector3D segmentPose = getSegmentPose(string);
+		Vector3D segmentPose = getSegmentPose(jointDef.getName());
 		return segmentPose;
 	}
 
@@ -77,9 +83,9 @@ public class ArmKinematics
 			{
 				// System.out.println("'" + segment.getKey() + "' "
 				// + segment.getValue());
-				ret = ret.add(segment.getValue().transform.transform);
+				ret = ret.add(segment.getValue().getTransform().getVector());
 
-				ret = segment.getValue().rotation.applyInverseTo(ret);
+				ret = segment.getValue().getRotation().applyInverseTo(ret);
 				// System.out.println(ret);
 			}
 		}
@@ -97,9 +103,17 @@ public class ArmKinematics
 		return getSegmentPose(null);
 	}
 
-	public Joint getJoint(String name)
+	public JointDefinition getJointDefinition(String name)
 	{
-		return (Joint) segments.get(name);
+		return (JointDefinition) segments.get(name);
 	}
+	
+	/**
+	 * Returns the Joint for the given Joint Definition.
+	 * @param definition
+	 * @return
+	 */
+	public abstract iJoint getJoint(JointDefinition definition);
+	
 
 }

@@ -10,6 +10,12 @@ import org.junit.Test;
 
 public class ArmTest
 {
+
+//	JointDefinition TURRET_JOINT_DEF = new JointDefinition("Turret", Axis.YAW);
+//	JointDefinition BASE_JOINT_DEF = new JointDefinition("Arm Base", Axis.PITCH);
+//	JointDefinition CENTRE_JOINT_DEF = new JointDefinition("Arm Center", Axis.PITCH);
+//	JointDefinition WRIST_JOINT_DEF = new JointDefinition("Wrist", Axis.PITCH);
+
 	// @Test
 	// public void testTurretAngle()
 	// {
@@ -80,15 +86,15 @@ public class ArmTest
 	public void testJoint1()
 	{
 		ArmKinematics arm = defineArm();
-		arm.getJoint("Turret").setJointAngle(0);
+		TestArmKinematics.TURRET_JOINT_DEF.setJointAngle(0);
 		Pose pose = new Pose(0, 20, 202, 0, 0, 0);
 		checkError(arm, pose);
 
-		arm.getJoint("Turret").setJointAngle(Math.PI / -2);
+		TestArmKinematics.TURRET_JOINT_DEF.setJointAngle(Math.PI / -2);
 		pose = new Pose(-20, 0, 202, 0, 0, 0);
 		checkError(arm, pose);
 
-		arm.getJoint("Turret").setJointAngle(Math.PI / 2);
+		TestArmKinematics.TURRET_JOINT_DEF.setJointAngle(Math.PI / 2);
 		pose = new Pose(20, 0, 202, 0, 0, 0);
 		checkError(arm, pose);
 
@@ -98,15 +104,15 @@ public class ArmTest
 	public void testJoint2()
 	{
 		ArmKinematics arm = defineArm();
-		arm.getJoint("Arm Base").setJointAngle(0);
+		TestArmKinematics.BASE_JOINT_DEF.setJointAngle(0);
 		Pose pose = new Pose(0, 20, 202, 0, 0, 0);
 		checkError(arm, pose);
 
-		arm.getJoint("Arm Base").setJointAngle(Math.PI / 2);
+		TestArmKinematics.BASE_JOINT_DEF.setJointAngle(Math.PI / 2);
 		pose = new Pose(0, 182, 40, 0, 0, 0);
 		checkError(arm, pose);
 
-		arm.getJoint("Arm Base").setJointAngle(Math.PI / -2);
+		TestArmKinematics.BASE_JOINT_DEF.setJointAngle(Math.PI / -2);
 		pose = new Pose(0, -142, 40, 0, 0, 0);
 		checkError(arm, pose);
 
@@ -119,7 +125,7 @@ public class ArmTest
 		Double z = arm.getEndEffectorPose().getZ();
 		for (double a = -Math.PI; a < Math.PI; a += Math.PI / 10.0)
 		{
-			arm.getJoint("Turret").setJointAngle(a);
+			TestArmKinematics.TURRET_JOINT_DEF.setJointAngle(a);
 			System.out.println(z + " " + arm.getEndEffectorPose().getZ());
 			assertTrue(Math.abs(arm.getEndEffectorPose().getZ() - z) < .1);
 
@@ -133,7 +139,7 @@ public class ArmTest
 		Double x = arm.getEndEffectorPose().getX();
 		for (double a = -Math.PI; a < Math.PI; a += Math.PI / 10.0)
 		{
-			arm.getJoint("Arm Base").setJointAngle(a);
+			TestArmKinematics.BASE_JOINT_DEF.setJointAngle(a);
 			System.out.println(x + " " + arm.getEndEffectorPose().getX());
 			assertTrue(Math.abs(arm.getEndEffectorPose().getX() - x) < .1);
 
@@ -147,7 +153,7 @@ public class ArmTest
 		Double x = arm.getEndEffectorPose().getX();
 		for (double a = -Math.PI; a < Math.PI; a += Math.PI / 10.0)
 		{
-			arm.getJoint("Arm Center").setJointAngle(a);
+			TestArmKinematics.CENTRE_JOINT_DEF.setJointAngle(a);
 			System.out.println(x + " " + arm.getEndEffectorPose().getX());
 			assertTrue(Math.abs(arm.getEndEffectorPose().getX() - x) < .1);
 
@@ -243,24 +249,8 @@ public class ArmTest
 
 	private ArmKinematics defineArm()
 	{
-		// next time I'll use the standard as at chapter 7.2.1 in robotics book.
-		//
-		// the joint at the end of a link is aligned such that the axis of
-		// rotation of the joint is around the z-axis of the link and the x-axis
-		// is parelle to the link
-		ArmKinematics arm = new ArmKinematics(Frame.getWorldFrame(), new Pose(0, 0, 0, 0, 0, 0));
-
-		arm.add(new Link("Base to Servo", 0, 0, 20, 0, 0, 0));
-		arm.add(new Joint("Turret", Axis.YAW, null, 0.0));
-		arm.add(new Link("Turret to arm Base", 0, 20, 20, 0, 0, 0));
-		arm.add(new Joint("Arm Base", Axis.PITCH, null, 0.0));
-		arm.add(new Link("Arm segment 1", 0, 0, 81, 0, 0, 0));
-		arm.add(new Joint("Arm Center", Axis.PITCH, null, 0.0));
-		arm.add(new Link("Arm segment 2", 0, 0, 81, 0, 0, 0));
-		arm.add(new Joint("Wrist", Axis.PITCH, null, 0.0));
-
-		arm.setInvKinematics(getInvKinematics());
-		return arm;
+		
+		return new TestArmKinematics();
 	}
 
 	@Test
@@ -287,9 +277,9 @@ public class ArmTest
 		ArmKinematics arm = defineArm();
 
 		// all angles zero
-		arm.getJoint("Turret").setJointAngle(0);
-		arm.getJoint("Arm Base").setJointAngle(0);
-		arm.getJoint("Arm Center").setJointAngle(0);
+		TestArmKinematics.TURRET_JOINT_DEF.setJointAngle(0);
+		TestArmKinematics.BASE_JOINT_DEF.setJointAngle(0);
+		TestArmKinematics.CENTRE_JOINT_DEF.setJointAngle(0);
 
 		Pose pose = new Pose(0, 20, 202, 0, 0, 0);
 
@@ -351,67 +341,12 @@ public class ArmTest
 	{
 		Vector3D endPoint = arm.getEndEffectorPose();
 
-		double xdiff = Math.abs(pose.transform.transform.getX()
-				- endPoint.getX());
-		double ydiff = Math.abs(pose.transform.transform.getY()
-				- endPoint.getY());
-		double zdiff = Math.abs(pose.transform.transform.getZ()
-				- endPoint.getZ());
-//		System.out.println(pose.transform + " " + endPoint);
+		double xdiff = Math.abs(pose.getTransform().getVector().getX() - endPoint.getX());
+		double ydiff = Math.abs(pose.getTransform().getVector().getY() - endPoint.getY());
+		double zdiff = Math.abs(pose.getTransform().getVector().getZ() - endPoint.getZ());
+		// System.out.println(pose.transform + " " + endPoint);
 		assertTrue(xdiff < 3 && ydiff < 3 && zdiff < 3);
 	}
 
-	private InvKinematics getInvKinematics()
-	{
-		return new InvKinematics()
-		{
 
-			public void determine(ArmKinematics arm, Pose endEffectorPose)
-			{
-
-				// determine and set turret angle
-				Point endPoint = endEffectorPose.applyPose(new Point(arm
-						.getFrame(), 0, 0, 0));
-
-				double y = endPoint.getY();
-				double x = endPoint.getX();
-
-				double turretAngle = Math.atan2(x, y);
-
-				arm.getJoint("Turret").setJointAngle(turretAngle);
-				Vector3D armBase = arm.getPoint("Arm Base");
-
-
-				// calculate distance between armBase and wrist
-				double extend = Vector3D.distance(armBase, endPoint.getPoint());
-				// double extend = new Transform(endPoint,
-				// armBase).getDistance();
-
-				// calculate angle of the bend in the arm to give the desired
-				// length
-				double midArmAngle = Math.acos(((extend / 2.0) / 81.0)) * 2.0;
-
-				// midArmAngle -= Math.PI;
-
-				// calculate angle for armBase
-				// atan(changeInXY/changeInZ)
-
-				double z = endPoint.getZ() - armBase.getZ();
-				x = new Transform(new Point(arm.getFrame(), endPoint.getX(),
-						endPoint.getY(), 0), new Point(arm.getFrame(),
-						armBase.getX(), armBase.getY(), 0)).getDistance();
-
-				double baseAngle = Math.atan2(x, z) - (midArmAngle / 2.0);
-
-				// set joint angles !!
-				arm.getJoint("Arm Base").setJointAngle(baseAngle);
-				arm.getJoint("Arm Center").setJointAngle(midArmAngle);
-
-
-			}
-
-		};
-	}
-
-	
 }
