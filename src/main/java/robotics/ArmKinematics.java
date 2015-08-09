@@ -14,7 +14,7 @@ public class ArmKinematics
 
 	private InvKinematics invKinematics;
 
-	Map<String, Pose> segments = new LinkedHashMap<>();
+	private Map<String, Pose> segments = new LinkedHashMap<>();
 
 	private Frame frame;
 
