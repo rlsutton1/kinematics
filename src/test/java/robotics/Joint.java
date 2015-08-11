@@ -13,4 +13,11 @@ public class Joint implements iJoint
 	{
 	}
 
+	@Override
+	public double getAngle()
+	{
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

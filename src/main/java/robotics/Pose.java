@@ -9,11 +9,33 @@ import org.apache.commons.math3.geometry.euclidean.threed.RotationOrder;
 public class Pose
 {
 	// rotation + transform... homtrans?
-
-	private Transform transform;
-	private Rotation rotation;
+	
+	/**
+	 * Optional name of this pose
+	 */
 	private String name;
+	
+	/**
+	 * The current 3D transformation of those pose from the origin.
+	 * i.e. an offset in the x,y,z axis to the location of this pose.
+	 */
+	private Transform transform;
+	
+	/**
+	 * TODO: how do you describe the rotation?
+	 * Is this a zero length vector that points at the pose from the direction
+	 * defined by the rotation?
+	 */
+	private Rotation rotation;
 
+	/**
+	 * Creates a new pose based at the origin (0,0,0) with no rotation (i.e. all angles set to zero). 
+	 * @param name Name of the new pose
+	 */
+	public Pose(String name)
+	{
+		this(name, 0,0,0,0,0,0);
+	}
 	
 	public Pose(double x, double y, double z, double roll, double pitch, double yaw)
 	{
@@ -27,23 +49,6 @@ public class Pose
 		this. rotation = new Rotation(RotationOrder.XYZ, roll, pitch, yaw);
 	}
 
-	/**
-	 * Copies an existing Pose to new Pose.
-	 * 
-	 * @param name Name of the new pose
-	 * @param pose The pose that we are making a copy of. If the pose is null than the 
-	 * 		new pose will be based at the origin with zero angles for each part or the axis (roll, pitch and yaw).
-	 */
-	public Pose(String name, Pose pose)
-	{
-		if (pose == null)
-		{
-			pose = new Pose(name, 0, 0, 0, 0, 0, 0);
-		}
-		this.transform = pose.getTransform();
-		this.rotation = pose.rotation;
-		this.name = name;
-	}
 
 	/**
 	 * Creates a new Pose. 
@@ -51,7 +56,7 @@ public class Pose
 	 * @param add
 	 * @param applyInverseTo
 	 */
-	public Pose(String name, Point add, Rotation applyInverseTo)
+	public Pose(String name, Point3D add, Rotation applyInverseTo)
 	{
 		this.transform = new Transform(add);
 		this.rotation = applyInverseTo;
@@ -85,7 +90,7 @@ public class Pose
 	 * @param point The point of where the tip of the robot arm is to be positioned (Posed).
 	 * @return The Pose required to position the tip of the robot arm to the given 3D point.
 	 */
-	public Point applyPose(Point point)
+	public Point3D applyPose(Point3D point)
 	{
 		return point.add(getTransform()).invRotate(getRotation());
 
@@ -107,7 +112,7 @@ public class Pose
 		
 	}
 
-	Point revertPose(Point point)
+	Point3D revertPose(Point3D point)
 	{
 		return point.rotate(getRotation()).subtract(getTransform());
 	}
@@ -117,9 +122,9 @@ public class Pose
 		return name;
 	}
 
-	public Point getPoint(Frame frame)
+	public Point3D getPoint(Frame frame)
 	{
-		return applyPose(new Point(frame, 0, 0, 0));
+		return applyPose(new Point3D(frame, 0, 0, 0));
 	}
 
 	public double getX()

@@ -20,8 +20,6 @@ public class ServoAngleToPwmCalculatorTest
 
 		System.out.println( (int) arm.getTurretPwm());
 
-
-
 		arm.setTurretAngle(Math.toRadians(80));
 
 		System.out.println((int) arm.getTurretPwm());

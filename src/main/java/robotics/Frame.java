@@ -15,14 +15,14 @@ public class Frame
 		this.pose = pose;
 	}
 
-	Point toParentFrame(Point point)
+	Point3D toParentFrame(Point3D point)
 	{
 
 		return null;
 		//return pose.transform(this,point);
 	}
 
-	Point toChildFrame(Frame childFrame, Point point)
+	Point3D toChildFrame(Frame childFrame, Point3D point)
 	{
 		return childFrame.getPose().applyPose(point);
 	}
@@ -37,7 +37,7 @@ public class Frame
 		return parentFrame;
 	}
 
-	static final Frame worldFrame = new Frame("World Frame",null,null);
+	private static final Frame worldFrame = new Frame("World Frame",null,null);
 	
 	public static Frame getWorldFrame()
 	{

@@ -3,13 +3,13 @@ package robotics;
 import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
-public class Point
+public class Point3D
 {
 
 	private Vector3D point;
 	private Frame frame;
 
-	public Point(Frame frame, double x, double y, double z)
+	public Point3D(Frame frame, double x, double y, double z)
 	{
 		this.frame = frame;
 		this.point = new Vector3D(x, y, z);
@@ -26,27 +26,27 @@ public class Point
 		return frame;
 	}
 
-	public Point(Vector3D point)
+	public Point3D(Vector3D point)
 	{
 		this.point = point;
 	}
 
-	public Point subtract(Transform transform)
+	public Point3D subtract(Transform transform)
 	{
 		return transform.subtract(getPoint());
 	}
 
-	public Point rotate(Rotation rotation)
+	public Point3D rotate(Rotation rotation)
 	{
-		return new Point(rotation.applyTo(getPoint()));
+		return new Point3D(rotation.applyTo(getPoint()));
 	}
 
-	public Point invRotate(Rotation rotation)
+	public Point3D invRotate(Rotation rotation)
 	{
-		return new Point(rotation.applyInverseTo(getPoint()));
+		return new Point3D(rotation.applyInverseTo(getPoint()));
 	}
 
-	public Point add(Transform transform)
+	public Point3D add(Transform transform)
 	{
 		return transform.add(getPoint());
 	}

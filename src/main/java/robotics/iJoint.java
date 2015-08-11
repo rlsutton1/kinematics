@@ -10,5 +10,7 @@ public interface iJoint
 	 * @param angle The Angle in radians to set the Joint angle to. 
 	 */
 	public void setAngle(double angle);
+	
+	public double getAngle();
 
 }

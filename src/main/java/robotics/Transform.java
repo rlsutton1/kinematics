@@ -37,7 +37,7 @@ public class Transform
 	 * 
 	 * @param point the point used to describe the end point of the vector a start point of the origin is implied.
 	 */
-	public Transform(Point point)
+	public Transform(Point3D point)
 	{
 		double xoffset = point.getX();
 		double yoffset = point.getY();
@@ -54,7 +54,7 @@ public class Transform
 	 * @param endPoint the endPoint vector
 	 * @param startPoint the starting point of the vector
 	 */
-	public Transform(Point endPoint, Point startPoint)
+	public Transform(Point3D endPoint, Point3D startPoint)
 	{
 		double xoffset = endPoint.getX() - startPoint.getX();
 		double yoffset = endPoint.getY() - startPoint.getY();
@@ -74,9 +74,9 @@ public class Transform
 	 * 
 	 * @return the transformed Point.
 	 */
-	public Point add(Vector3D pointToTransform)
+	public Point3D add(Vector3D pointToTransform)
 	{
-		return new Point(pointToTransform.add(transform));
+		return new Point3D(pointToTransform.add(transform));
 	}
 
 	/**
@@ -89,9 +89,9 @@ public class Transform
 	 * 
 	 * @return the transformed Point.
 	 */
-	public Point subtract(Vector3D pointToTransform)
+	public Point3D subtract(Vector3D pointToTransform)
 	{
-		return new Point(pointToTransform.subtract(transform));
+		return new Point3D(pointToTransform.subtract(transform));
 	}
 
 	public void getRotation()
