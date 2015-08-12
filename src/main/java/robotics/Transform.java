@@ -64,6 +64,11 @@ public class Transform
 	}
 
 
+	public Transform(Vector3D ret)
+	{
+		transform = ret;
+	}
+
 	/**
 	 * Applies this transform to given point.
 	 * 
