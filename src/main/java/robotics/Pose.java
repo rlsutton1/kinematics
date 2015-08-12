@@ -7,71 +7,88 @@ import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
 import org.apache.commons.math3.geometry.euclidean.threed.RotationOrder;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
+/**
+ * a pose consists of a transform and a rotation, applied in that order
+ * 
+ * @author rsutton
+ * 
+ */
 public class Pose
 {
 	// rotation + transform... homtrans?
-	
+
 	/**
 	 * Optional name of this pose
 	 */
 	private String name;
-	
+
 	/**
-	 * The current 3D transformation of those pose from the origin.
-	 * i.e. an offset in the x,y,z axis to the location of this pose.
+	 * The current 3D transformation of those pose from the origin. i.e. an
+	 * offset in the x,y,z axis to the location of this pose.
 	 */
 	private Transform transform;
-	
+
 	/**
-	 * TODO: how do you describe the rotation?
-	 * Is this a zero length vector that points at the pose from the direction
-	 * defined by the rotation?
+	 * TODO: how do you describe the rotation? Is this a zero length vector that
+	 * points at the pose from the direction defined by the rotation?
 	 */
 	private Rotation rotation;
 
 	/**
-	 * Creates a new pose based at the origin (0,0,0) with no rotation (i.e. all angles set to zero). 
-	 * @param name Name of the new pose
+	 * Creates a new pose based at the origin (0,0,0) with no rotation (i.e. all
+	 * angles set to zero).
+	 * 
+	 * @param name
+	 *            Name of the new pose
 	 */
 	public Pose(String name)
 	{
-		this(name, 0,0,0,0,0,0);
-	}
-	
-	public Pose(double x, double y, double z, double roll, double pitch, double yaw)
-	{
-		this(null, x,y,z,roll,pitch,yaw);
+		this(name, 0, 0, 0, 0, 0, 0);
 	}
 
-	public Pose(String name, double x, double y, double z, double roll, double pitch, double yaw)
+	public Pose(double x, double y, double z, double roll, double pitch,
+			double yaw)
+	{
+		this(null, x, y, z, roll, pitch, yaw);
+	}
+
+	public Pose(String name, double x, double y, double z, double roll,
+			double pitch, double yaw)
 	{
 		this.name = name;
 		this.transform = new Transform(x, y, z);
-		this. rotation = new Rotation(RotationOrder.XYZ, roll, pitch, yaw);
+		this.rotation = new Rotation(RotationOrder.XYZ, roll, pitch, yaw);
 	}
-	
+
 	public Pose(Vector3D ret, Rotation resultingRotation)
 	{
 		transform = new Transform(ret);
 		rotation = resultingRotation;
 	}
 
+	/**
+	 * the transform will be rotated in to this pose and then added to the
+	 * vector and finally the rotations will be added to return the resulting
+	 * Pose
+	 * 
+	 * @param pose
+	 * @return
+	 */
 	Pose compound(Pose pose)
 	{
 		Vector3D ret = transform.getVector();
-		Rotation resultingRotation =rotation;
-		
-			
-			ret = ret.add(resultingRotation.applyInverseTo(pose.transform.getVector()));
-			resultingRotation =pose.getRotation().applyTo( rotation);
+		Rotation resultingRotation = rotation;
 
-		
-		return new Pose(ret,resultingRotation);
+		ret = ret.add(resultingRotation.applyInverseTo(pose.transform
+				.getVector()));
+		resultingRotation = pose.getRotation().applyTo(rotation);
+
+		return new Pose(ret, resultingRotation);
 	}
-	
 
 	/**
-	 * Creates a new Pose. 
+	 * Creates a new Pose.
+	 * 
 	 * @param name
 	 * @param add
 	 * @param applyInverseTo
@@ -83,8 +100,6 @@ public class Pose
 		this.name = name;
 	}
 
-	
-
 	@Override
 	public String toString()
 	{
@@ -94,7 +109,8 @@ public class Pose
 			nf.setMaximumFractionDigits(1);
 			return getTransform() + " " + nf.format(getAngle(0)) + " "
 					+ nf.format(getAngle(1)) + " " + nf.format(getAngle(2));
-		} catch (CardanEulerSingularityException e)
+		}
+		catch (CardanEulerSingularityException e)
 		{
 			return "Singularity";
 		}
@@ -109,8 +125,11 @@ public class Pose
 	/**
 	 * convert the given point into a Pose
 	 * 
-	 * @param point The point of where the tip of the robot arm is to be positioned (Posed).
-	 * @return The Pose required to position the tip of the robot arm to the given 3D point.
+	 * @param point
+	 *            The point of where the tip of the robot arm is to be
+	 *            positioned (Posed).
+	 * @return The Pose required to position the tip of the robot arm to the
+	 *         given 3D point.
 	 */
 	public Point3D applyPose(Point3D point)
 	{
@@ -123,15 +142,15 @@ public class Pose
 		return rotation;
 	}
 
-
-	/** TODO: remove this as setters are bad
+	/**
+	 * TODO: remove this as setters are bad
 	 * 
 	 * @param rotation
 	 */
 	public void setRotation(Rotation rotation)
 	{
 		this.rotation = rotation;
-		
+
 	}
 
 	Point3D revertPose(Point3D point)
@@ -168,6 +187,5 @@ public class Pose
 	{
 		return transform;
 	}
-
 
 }
