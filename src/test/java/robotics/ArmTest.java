@@ -339,7 +339,7 @@ public class ArmTest
 
 	private void checkError(ArmKinematics arm, Pose pose)
 	{
-		Vector3D endPoint = arm.getEndEffectorPose();
+		Vector3D endPoint = arm.getEndEffectorPose().getTransform().getVector();
 
 		double xdiff = Math.abs(pose.getTransform().getVector().getX() - endPoint.getX());
 		double ydiff = Math.abs(pose.getTransform().getVector().getY() - endPoint.getY());

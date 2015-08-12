@@ -98,7 +98,7 @@ public class MeArmKinematics extends ArmKinematics
 
 	public void checkError(ArmKinematics arm, Pose pose)
 	{
-		Vector3D endPoint = arm.getEndEffectorPose();
+		Vector3D endPoint = arm.getEndEffectorPose().getTransform().getVector();
 
 		double xdiff = Math.abs(pose.getTransform().getVector().getX() - endPoint.getX());
 		double ydiff = Math.abs(pose.getTransform().getVector().getY() - endPoint.getY());
@@ -127,7 +127,7 @@ public class MeArmKinematics extends ArmKinematics
 				Map<Definition, ComputationalPose> poses = arm.getComputationalPoses(null);
 
 				poses.get(TURRET_JOINT_DEF).setAngle(turretAngle);
-				Vector3D armBase = arm.getPoint(BASE_JOINT_DEF);
+				Vector3D armBase = arm.getSegmentPose(BASE_JOINT_DEF).getTransform().getVector();
 
 				// calculate distance between armBase and wrist
 				double extend = Vector3D.distance(armBase, endPoint.getPoint());

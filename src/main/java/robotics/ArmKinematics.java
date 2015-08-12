@@ -129,13 +129,7 @@ public abstract class ArmKinematics
 		return frame;
 	}
 
-	public Vector3D getPoint(JointDefinition jointDef)
-	{
-		Vector3D segmentPose = getSegmentPose(jointDef);
-		return segmentPose;
-	}
-
-	private Vector3D getSegmentPose(Definition definition)
+	public Pose getSegmentPose(Definition definition)
 	{
 	
 		Pose ret = new Pose(Vector3D.ZERO,new Rotation(RotationOrder.XYZ, 0.0,0.0,0.0));
@@ -143,10 +137,10 @@ public abstract class ArmKinematics
 		{
 			ret = ret.compound(segment);
 		}
-		return ret.getTransform().getVector();
+		return ret;
 	}
 
-	public Vector3D getEndEffectorPose()
+	public Pose getEndEffectorPose()
 	{
 		return getSegmentPose(null);
 	}

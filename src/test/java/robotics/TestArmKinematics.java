@@ -83,7 +83,7 @@ public class TestArmKinematics extends ArmKinematics
 
 				Map<Definition, ComputationalPose> poses = arm.getComputationalPoses(null);
 				poses.get(TURRET_JOINT_DEF).setAngle(turretAngle);
-				Vector3D armBase = arm.getPoint(BASE_JOINT_DEF);
+				Vector3D armBase = arm.getSegmentPose(BASE_JOINT_DEF).getTransform().getVector();
 
 				// calculate distance between armBase and wrist
 				double extend = Vector3D.distance(armBase, endPoint.getPoint());
