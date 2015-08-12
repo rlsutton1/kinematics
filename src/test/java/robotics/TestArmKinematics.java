@@ -74,10 +74,9 @@ public class TestArmKinematics extends ArmKinematics
 			{
 
 				// determine and set turret angle
-				Point3D endPoint = endEffectorPose.applyPose(new Point3D(arm.getFrame(), 0, 0, 0));
 
-				double y = endPoint.getY();
-				double x = endPoint.getX();
+				double y = endEffectorPose.getY();
+				double x = endEffectorPose.getX();
 
 				double turretAngle = Math.atan2(x, y);
 
@@ -86,21 +85,22 @@ public class TestArmKinematics extends ArmKinematics
 				Vector3D armBase = arm.getSegmentPose(BASE_JOINT_DEF).getTransform().getVector();
 
 				// calculate distance between armBase and wrist
-				double extend = Vector3D.distance(armBase, endPoint.getPoint());
+				double extend = Vector3D.distance(armBase, endEffectorPose.getTransform().getVector());
 				// double extend = new Transform(endPoint,
 				// armBase).getDistance();
 
 				// calculate angle of the bend in the arm to give the desired
-				// length
-				double midArmAngle = Math.acos(((extend / 2.0) / 81.0)) * 2.0;
+				// length, assuming the two links are of the same length.
+				double linkLength = 81.0;
+				double midArmAngle = Math.acos(((extend / 2.0) / linkLength)) * 2.0;
 
 				// midArmAngle -= Math.PI;
 
 				// calculate angle for armBase
 				// atan(changeInXY/changeInZ)
 
-				double z = endPoint.getZ() - armBase.getZ();
-				x = new Transform(new Point3D(arm.getFrame(), endPoint.getX(), endPoint.getY(), 0), new Point3D(
+				double z = endEffectorPose.getZ() - armBase.getZ();
+				x = new Transform(new Point3D(arm.getFrame(), endEffectorPose.getX(), endEffectorPose.getY(), 0), new Point3D(
 						arm.getFrame(), armBase.getX(), armBase.getY(), 0)).getDistance();
 
 				double baseAngle = Math.atan2(x, z) - (midArmAngle / 2.0);
