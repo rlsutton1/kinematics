@@ -23,20 +23,20 @@ public class Pose
 	private String name;
 
 	/**
-	 * The current 3D transformation of those pose from the origin. i.e. an
-	 * offset in the x,y,z axis to the location of this pose.
+	 * The current 3D transformation of those pose from the origin of the
+	 * containing frame. i.e. an offset in the x,y,z axis to the location of
+	 * this pose.
 	 */
 	private Transform transform;
 
 	/**
-	 * TODO: how do you describe the rotation? Is this a zero length vector that
-	 * points at the pose from the direction defined by the rotation?
+	 * A series of subsequent rotations about the X,Y and Z axis
 	 */
 	private Rotation rotation;
 
 	/**
-	 * Creates a new pose based at the origin (0,0,0) with no rotation (i.e. all
-	 * angles set to zero).
+	 * Creates a new pose based at the origin (0,0,0) of the containing frame
+	 * with no rotation (i.e. all angles set to zero).
 	 * 
 	 * @param name
 	 *            Name of the new pose
@@ -123,13 +123,11 @@ public class Pose
 	}
 
 	/**
-	 * convert the given point into a Pose
+	 * translate the given point into this Pose
 	 * 
 	 * @param point
-	 *            The point of where the tip of the robot arm is to be
-	 *            positioned (Posed).
-	 * @return The Pose required to position the tip of the robot arm to the
-	 *         given 3D point.
+	 *            The point to be translated.
+	 * @return The Point transformed by this Pose
 	 */
 	public Point3D applyPose(Point3D point)
 	{
