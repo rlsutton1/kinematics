@@ -5,6 +5,7 @@ import java.text.NumberFormat;
 import org.apache.commons.math3.geometry.euclidean.threed.CardanEulerSingularityException;
 import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
 import org.apache.commons.math3.geometry.euclidean.threed.RotationOrder;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 public class Pose
 {
@@ -48,7 +49,26 @@ public class Pose
 		this.transform = new Transform(x, y, z);
 		this. rotation = new Rotation(RotationOrder.XYZ, roll, pitch, yaw);
 	}
+	
+	public Pose(Vector3D ret, Rotation resultingRotation)
+	{
+		transform = new Transform(ret);
+		rotation = resultingRotation;
+	}
 
+	Pose compound(Pose pose)
+	{
+		Vector3D ret = transform.getVector();
+		Rotation resultingRotation =rotation;
+		
+			resultingRotation =pose.getRotation().applyTo( rotation);
+			
+			ret = ret.add(resultingRotation.applyInverseTo(pose.transform.getVector()));
+
+		
+		return new Pose(ret,resultingRotation);
+	}
+	
 
 	/**
 	 * Creates a new Pose. 
@@ -62,6 +82,8 @@ public class Pose
 		this.rotation = applyInverseTo;
 		this.name = name;
 	}
+
+	
 
 	@Override
 	public String toString()
