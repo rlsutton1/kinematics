@@ -61,9 +61,9 @@ public class Pose
 		Vector3D ret = transform.getVector();
 		Rotation resultingRotation =rotation;
 		
-			resultingRotation =pose.getRotation().applyTo( rotation);
 			
 			ret = ret.add(resultingRotation.applyInverseTo(pose.transform.getVector()));
+			resultingRotation =pose.getRotation().applyTo( rotation);
 
 		
 		return new Pose(ret,resultingRotation);
