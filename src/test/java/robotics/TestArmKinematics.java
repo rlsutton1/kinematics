@@ -11,10 +11,10 @@ public class TestArmKinematics extends ArmKinematics
 	protected static final String ARM_CENTER_JOINT = "Arm Center";
 	protected static final String ARM_WRITS_JOINT = "Arm Wrist";
 
-	Joint TURRET_JOINT;
-	Joint BASE_JOINT;
-	Joint CENTRE_JOINT;
-	Joint WRIST_JOINT;
+	iJoint TURRET_JOINT;
+	iJoint BASE_JOINT;
+	iJoint CENTRE_JOINT;
+	iJoint WRIST_JOINT;
 
 	static protected final JointDefinition TURRET_JOINT_DEF = new JointDefinition(ARM_TURRET_JOINT, Axis.YAW)
 	{

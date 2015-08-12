@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
+import org.apache.commons.math3.geometry.euclidean.threed.RotationOrder;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 public abstract class ArmKinematics
@@ -50,7 +52,7 @@ public abstract class ArmKinematics
 		definitions.put(link.getName(), link);
 	}
 
-	public <J extends iJoint>  J add(JointDefinition jointDef) throws DuplicateDefinition
+	public  iJoint   add(JointDefinition jointDef) throws DuplicateDefinition
 	{
 		if (definitionPoses != null)
 			throw new IllegalStateException("You can't add new definitions after the DefinitionPoses have been created");
@@ -61,7 +63,7 @@ public abstract class ArmKinematics
 
 		definitions.put(jointDef.getName(), jointDef);
 
-		return (J) jointDef.createJoint();
+		return jointDef.createJoint();
 	}
 
 	/**
@@ -135,23 +137,13 @@ public abstract class ArmKinematics
 
 	private Vector3D getSegmentPose(Definition definition)
 	{
-		ArrayList<Pose> reversedSegments = new ArrayList<>();
-
-		reversedSegments.addAll(getComputationalPoses(definition).values());
-		Collections.reverse(reversedSegments);
-
-		Vector3D ret = Vector3D.ZERO;
-
-		for (Pose segment : reversedSegments)
+	
+		Pose ret = new Pose(Vector3D.ZERO,new Rotation(RotationOrder.XYZ, 0.0,0.0,0.0));
+		for (Pose segment : getComputationalPoses(definition).values())
 		{
-			// System.out.println("'" + segment.getKey() + "' "
-			// + segment.getValue());
-			ret = ret.add(segment.getTransform().getVector());
-
-			ret = segment.getRotation().applyInverseTo(ret);
-			// System.out.println(ret);
+			ret = ret.compound(segment);
 		}
-		return ret;
+		return ret.getTransform().getVector();
 	}
 
 	public Vector3D getEndEffectorPose()
