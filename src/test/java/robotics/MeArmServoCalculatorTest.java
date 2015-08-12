@@ -2,6 +2,8 @@ package robotics;
 
 import org.junit.Test;
 
+import robotics.meArm.MeArmServoCalculator;
+
 public class MeArmServoCalculatorTest
 {
 

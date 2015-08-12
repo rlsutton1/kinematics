@@ -4,6 +4,9 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import robotics.helpers.ServoAngleToPwmCalculator;
+import robotics.meArm.MeArmServoCalculator;
+
 public class ServoAngleToPwmCalculatorTest
 {
 
@@ -16,8 +19,6 @@ public class ServoAngleToPwmCalculatorTest
 		arm.setTurretAngle(Math.toRadians(-70));
 
 		System.out.println( (int) arm.getTurretPwm());
-
-
 
 		arm.setTurretAngle(Math.toRadians(80));
 

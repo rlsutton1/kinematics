@@ -9,32 +9,57 @@ import org.apache.commons.math3.geometry.euclidean.threed.RotationOrder;
 public class Pose
 {
 	// rotation + transform... homtrans?
+	
+	/**
+	 * Optional name of this pose
+	 */
+	private String name;
+	
+	/**
+	 * The current 3D transformation of those pose from the origin.
+	 * i.e. an offset in the x,y,z axis to the location of this pose.
+	 */
+	private Transform transform;
+	
+	/**
+	 * TODO: how do you describe the rotation?
+	 * Is this a zero length vector that points at the pose from the direction
+	 * defined by the rotation?
+	 */
+	private Rotation rotation;
 
-	Transform transform;
-	Rotation rotation;
-	String name;
-
+	/**
+	 * Creates a new pose based at the origin (0,0,0) with no rotation (i.e. all angles set to zero). 
+	 * @param name Name of the new pose
+	 */
+	public Pose(String name)
+	{
+		this(name, 0,0,0,0,0,0);
+	}
+	
 	public Pose(double x, double y, double z, double roll, double pitch, double yaw)
 	{
-		transform = new Transform(x, y, z);
-		rotation = new Rotation(RotationOrder.XYZ, roll, pitch, yaw);
+		this(null, x,y,z,roll,pitch,yaw);
 	}
 
-	public Pose(String name, Pose pose)
+	public Pose(String name, double x, double y, double z, double roll, double pitch, double yaw)
 	{
-		if (pose == null)
-		{
-			pose = new Pose(0, 0, 0, 0, 0, 0);
-		}
-		transform = pose.transform;
-		rotation = pose.rotation;
 		this.name = name;
+		this.transform = new Transform(x, y, z);
+		this. rotation = new Rotation(RotationOrder.XYZ, roll, pitch, yaw);
 	}
 
-	public Pose(String name, Point add, Rotation applyInverseTo)
+
+	/**
+	 * Creates a new Pose. 
+	 * @param name
+	 * @param add
+	 * @param applyInverseTo
+	 */
+	public Pose(String name, Point3D add, Rotation applyInverseTo)
 	{
-		transform = new Transform(add);
-		rotation = applyInverseTo;
+		this.transform = new Transform(add);
+		this.rotation = applyInverseTo;
 		this.name = name;
 	}
 
@@ -45,7 +70,7 @@ public class Pose
 		{
 			NumberFormat nf = NumberFormat.getNumberInstance();
 			nf.setMaximumFractionDigits(1);
-			return transform + " " + nf.format(getAngle(0)) + " "
+			return getTransform() + " " + nf.format(getAngle(0)) + " "
 					+ nf.format(getAngle(1)) + " " + nf.format(getAngle(2));
 		} catch (CardanEulerSingularityException e)
 		{
@@ -60,14 +85,14 @@ public class Pose
 	}
 
 	/**
-	 * convert the given point into
+	 * convert the given point into a Pose
 	 * 
-	 * @param point
-	 * @return
+	 * @param point The point of where the tip of the robot arm is to be positioned (Posed).
+	 * @return The Pose required to position the tip of the robot arm to the given 3D point.
 	 */
-	public Point applyPose(Point point)
+	public Point3D applyPose(Point3D point)
 	{
-		return point.add(transform).invRotate(getRotation());
+		return point.add(getTransform()).invRotate(getRotation());
 
 	}
 
@@ -76,9 +101,20 @@ public class Pose
 		return rotation;
 	}
 
-	Point revertPose(Point point)
+
+	/** TODO: remove this as setters are bad
+	 * 
+	 * @param rotation
+	 */
+	public void setRotation(Rotation rotation)
 	{
-		return point.rotate(getRotation()).subtract(transform);
+		this.rotation = rotation;
+		
+	}
+
+	Point3D revertPose(Point3D point)
+	{
+		return point.rotate(getRotation()).subtract(getTransform());
 	}
 
 	public String getName()
@@ -86,24 +122,30 @@ public class Pose
 		return name;
 	}
 
-	public Point getPoint(Frame frame)
+	public Point3D getPoint(Frame frame)
 	{
-		return applyPose(new Point(frame, 0, 0, 0));
+		return applyPose(new Point3D(frame, 0, 0, 0));
 	}
 
 	public double getX()
 	{
-		return transform.transform.getX();
+		return getTransform().getVector().getX();
 	}
 
 	public double getY()
 	{
-		return transform.transform.getY();
+		return getTransform().getVector().getY();
 	}
 
 	public double getZ()
 	{
-		return transform.transform.getZ();
+		return transform.getVector().getZ();
 	}
+
+	public Transform getTransform()
+	{
+		return transform;
+	}
+
 
 }

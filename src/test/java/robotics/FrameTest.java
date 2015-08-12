@@ -11,7 +11,7 @@ public class FrameTest
 	public void testTranslateToNewFrameWithXTranslation()
 	{
 		Frame f1 = new Frame("F1", null, null);
-		Point p1 = new Point(f1, 1, 2, 3);
+		Point3D p1 = new Point3D(f1, 1, 2, 3);
 		Frame f2 = new Frame("f2", f1, new Pose(1, 0, 0, 0, 0, 0));
 
 		assertValue(f1.toChildFrame(f2, p1).getX(), 2);
@@ -23,7 +23,7 @@ public class FrameTest
 	public void testTranslateToNewFrameWithYTranslation()
 	{
 		Frame f1 = new Frame("F1", null, null);
-		Point p1 = new Point(f1, 1, 2, 3);
+		Point3D p1 = new Point3D(f1, 1, 2, 3);
 		Frame f2 = new Frame("f2", f1, new Pose(0, 1, 0, 0, 0, 0));
 
 		assertValue(f1.toChildFrame(f2, p1).getX(), 1);
@@ -35,7 +35,7 @@ public class FrameTest
 	public void testTranslateToNewFrameWithZTranslation()
 	{
 		Frame f1 = new Frame("F1", null, null);
-		Point p1 = new Point(f1, 1, 2, 3);
+		Point3D p1 = new Point3D(f1, 1, 2, 3);
 		Frame f2 = new Frame("f2", f1, new Pose(0, 0, 1, 0, 0, 0));
 
 		assertValue(f1.toChildFrame(f2, p1).getX(), 1);
@@ -48,7 +48,7 @@ public class FrameTest
 	public void testTranslateToNewFrameWithXRotation()
 	{
 		Frame f1 = new Frame("F1", null, null);
-		Point p1 = new Point(f1, 0, 0, 1);
+		Point3D p1 = new Point3D(f1, 0, 0, 1);
 		Frame f2 = new Frame("f2", f1, new Pose(0, 0, 0, Math.PI / 2, 0, 0));
 
 		assertValue(f1.toChildFrame(f2, p1).getX(), 0);
@@ -61,7 +61,7 @@ public class FrameTest
 	public void testTranslateToNewFrameWithYRotation()
 	{
 		Frame f1 = new Frame("F1", null, null);
-		Point p1 = new Point(f1, 1, 0, 0);
+		Point3D p1 = new Point3D(f1, 1, 0, 0);
 		Frame f2 = new Frame("f2", f1, new Pose(0, 0, 0, 0, Math.PI / 2, 0));
 
 		assertValue(f1.toChildFrame(f2, p1).getX(), 0);
@@ -74,7 +74,7 @@ public class FrameTest
 	public void testTranslateToNewFrameWithZRotation()
 	{
 		Frame f1 = new Frame("F1", null, null);
-		Point p1 = new Point(f1, 0, 1, 0);
+		Point3D p1 = new Point3D(f1, 0, 1, 0);
 		Frame f2 = new Frame("f2", f1, new Pose(0, 0, 0, 0, 0, Math.PI / 2));
 
 		assertValue(f1.toChildFrame(f2, p1).getX(), 1);
