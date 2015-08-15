@@ -1,4 +1,6 @@
-package robotics;
+package robotics.arm;
+
+import robotics.Pose;
 
 public interface InvKinematics
 {

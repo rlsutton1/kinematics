@@ -74,7 +74,7 @@ public class Pose
 	 * @param pose
 	 * @return
 	 */
-	Pose compound(Pose pose)
+	public Pose compound(Pose pose)
 	{
 		Vector3D ret = transform.getVector();
 		Rotation resultingRotation = rotation;
@@ -135,7 +135,7 @@ public class Pose
 
 	}
 
-	Rotation getRotation()
+	protected Rotation getRotation()
 	{
 		return rotation;
 	}

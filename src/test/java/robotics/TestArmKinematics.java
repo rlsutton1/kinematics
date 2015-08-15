@@ -1,66 +1,38 @@
 package robotics;
 
-import java.util.Map;
-
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+
+import robotics.arm.ArmKinematics;
+import robotics.arm.Axis;
+import robotics.arm.InvKinematics;
+import robotics.arm.Joint;
+import robotics.arm.Link;
 
 public class TestArmKinematics extends ArmKinematics
 {
-	protected static final String ARM_TURRET_JOINT = "Turret";
-	protected static final String ARM_BASE_JOINT = "Arm Base";
-	protected static final String ARM_CENTER_JOINT = "Arm Center";
-	protected static final String ARM_WRITS_JOINT = "Arm Wrist";
 
-	iJoint TURRET_JOINT;
-	iJoint BASE_JOINT;
-	iJoint CENTRE_JOINT;
-	iJoint WRIST_JOINT;
-
-	static protected final JointDefinition TURRET_JOINT_DEF = new JointDefinition(ARM_TURRET_JOINT, Axis.YAW)
-	{
-		@Override
-		protected iJoint createJoint()
-		{
-			return new Joint();
-		}
-	};
-	static protected final JointDefinition BASE_JOINT_DEF = new JointDefinition(ARM_BASE_JOINT, Axis.PITCH)
-	{
-		@Override
-		protected iJoint createJoint()
-		{
-			return new Joint();
-		}
-	};
-	static protected final JointDefinition CENTRE_JOINT_DEF = new JointDefinition(ARM_CENTER_JOINT, Axis.PITCH)
-	{
-		@Override
-		protected iJoint createJoint()
-		{
-			return new Joint();
-		}
-	};
-	static protected final JointDefinition WRIST_JOINT_DEF = new JointDefinition(ARM_WRITS_JOINT, Axis.PITCH)
-	{
-		@Override
-		protected iJoint createJoint()
-		{
-			return new Joint();
-		}
-	};
+	public final Segment BASE_TO_SERVO;
+	public final Segment TURRET_JOINT;
+	public final Segment TURRET_TO_ARM_BASE;
+	public final Segment BASE_JOINT;
+	public final Segment ARM_SEGMENT1;
+	public final Segment CENTER_JOINT;
+	public final Segment ARM_SEGMENT2;
+	public final Segment WRIST_JOINT;
 
 	public TestArmKinematics()
 	{
 		super(Frame.getWorldFrame(), new Pose(0, 0, 0, 0, 0, 0));
 
-		add(new LinkDefinition("Base to Servo", 0, 0, 20, 0, 0, 0));
-		TURRET_JOINT = add(TURRET_JOINT_DEF);
-		add(new LinkDefinition("Turret to arm Base", 0, 20, 20, 0, 0, 0));
-		BASE_JOINT = add(BASE_JOINT_DEF);
-		add(new LinkDefinition("Arm segment 1", 0, 0, 81, 0, 0, 0));
-		CENTRE_JOINT = add(CENTRE_JOINT_DEF);
-		add(new LinkDefinition("Arm segment 2", 0, 0, 81, 0, 0, 0));
-		WRIST_JOINT = add(WRIST_JOINT_DEF);
+		BASE_TO_SERVO = add(new Link("Base to Servo", 0, 0, 20, 0, 0, 0));
+		TURRET_JOINT = add(new Joint("", Axis.YAW, 0, 0, 0));
+		TURRET_TO_ARM_BASE = add(new Link("Turret to arm Base", 0, 20, 20, 0,
+				0, 0));
+		BASE_JOINT = add(new Joint("", Axis.PITCH, 0, 0, 0));
+		ARM_SEGMENT1 = add(new Link("Arm segment 1", 0, 0, 81, 0, 0, 0));
+		CENTER_JOINT = add(new Joint("", Axis.PITCH, 0, 0, 0));
+		ARM_SEGMENT2 = add(new Link("Arm segment 2", 0, 0, 81, 0, 0, 0));
+		WRIST_JOINT = add(new Joint("", Axis.PITCH, 0, 0, 0));
 
 		setInvKinematics(getInvKinematics());
 	}
@@ -80,12 +52,13 @@ public class TestArmKinematics extends ArmKinematics
 
 				double turretAngle = Math.atan2(x, y);
 
-				Map<Definition, ComputationalPose> poses = arm.getComputationalPoses(null);
-				poses.get(TURRET_JOINT_DEF).setAngle(turretAngle);
-				Vector3D armBase = arm.getSegmentPose(BASE_JOINT_DEF).getTransform().getVector();
+				arm.getJoint(TURRET_JOINT).setAngle(turretAngle);
+				Vector3D armBase = arm.getSegmentPose(BASE_JOINT)
+						.getTransform().getVector();
 
 				// calculate distance between armBase and wrist
-				double extend = Vector3D.distance(armBase, endEffectorPose.getTransform().getVector());
+				double extend = Vector3D.distance(armBase, endEffectorPose
+						.getTransform().getVector());
 				// double extend = new Transform(endPoint,
 				// armBase).getDistance();
 
@@ -100,29 +73,19 @@ public class TestArmKinematics extends ArmKinematics
 				// atan(changeInXY/changeInZ)
 
 				double z = endEffectorPose.getZ() - armBase.getZ();
-				x = new Transform(new Point3D(arm.getFrame(), endEffectorPose.getX(), endEffectorPose.getY(), 0), new Point3D(
-						arm.getFrame(), armBase.getX(), armBase.getY(), 0)).getDistance();
+				x = new Transform(new Point3D(arm.getFrame(),
+						endEffectorPose.getX(), endEffectorPose.getY(), 0),
+						new Point3D(arm.getFrame(), armBase.getX(), armBase
+								.getY(), 0)).getDistance();
 
 				double baseAngle = Math.atan2(x, z) - (midArmAngle / 2.0);
 
-				// TODO: is it necessary to update the computational poses at this point as we have finished with them.
-				poses.get(BASE_JOINT_DEF).setAngle(baseAngle);
-				poses.get(CENTRE_JOINT_DEF).setAngle(midArmAngle);
-
-				// set joint angles !!
-				TURRET_JOINT_DEF.getJoint().setAngle(baseAngle);
-				BASE_JOINT_DEF.getJoint().setAngle(baseAngle);
-				CENTRE_JOINT_DEF.getJoint().setAngle(midArmAngle);
+				arm.getJoint(BASE_JOINT).setAngle(baseAngle);
+				arm.getJoint(CENTER_JOINT).setAngle(midArmAngle);
 
 			}
 
 		};
-	}
-
-	@Override
-	public iJoint getJoint(JointDefinition definition)
-	{
-		return definition.getJoint();
 	}
 
 }

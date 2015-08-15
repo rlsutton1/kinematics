@@ -8,6 +8,9 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3DFormat;
 import org.junit.Test;
 
+import robotics.arm.ArmKinematics;
+
+
 public class ArmTest
 {
 
@@ -85,16 +88,16 @@ public class ArmTest
 	@Test
 	public void testJoint1()
 	{
-		ArmKinematics arm = defineArm();
-		arm.getComputationalPoses(null).get(TestArmKinematics.TURRET_JOINT_DEF).setAngle(0);
+		TestArmKinematics arm = defineArm();
+		arm.getJoint(arm.TURRET_JOINT).setAngle(0);
 		Pose pose = new Pose(0, 20, 202, 0, 0, 0);
 		checkError(arm, pose);
 
-		arm.getComputationalPoses(null).get(TestArmKinematics.TURRET_JOINT_DEF).setAngle(Math.PI / -2);
+		arm.getJoint(arm.TURRET_JOINT).setAngle(Math.PI / -2);
 		pose = new Pose(-20, 0, 202, 0, 0, 0);
 		checkError(arm, pose);
 
-		arm.getComputationalPoses(null).get(TestArmKinematics.TURRET_JOINT_DEF).setAngle(Math.PI / 2);
+		arm.getJoint(arm.TURRET_JOINT).setAngle(Math.PI / 2);
 		pose = new Pose(20, 0, 202, 0, 0, 0);
 		checkError(arm, pose);
 
@@ -103,16 +106,16 @@ public class ArmTest
 	@Test
 	public void testJoint2()
 	{
-		ArmKinematics arm = defineArm();
-		arm.getComputationalPoses(null).get(TestArmKinematics.BASE_JOINT_DEF).setAngle(0);
+		TestArmKinematics arm = defineArm();
+		arm.getJoint(arm.BASE_JOINT).setAngle(0);
 		Pose pose = new Pose(0, 20, 202, 0, 0, 0);
 		checkError(arm, pose);
 
-		arm.getComputationalPoses(null).get(TestArmKinematics.BASE_JOINT_DEF).setAngle(Math.PI / 2);
+		arm.getJoint(arm.BASE_JOINT).setAngle(Math.PI / 2);
 		pose = new Pose(0, 182, 40, 0, 0, 0);
 		checkError(arm, pose);
 
-		arm.getComputationalPoses(null).get(TestArmKinematics.BASE_JOINT_DEF).setAngle(Math.PI / -2);
+		arm.getJoint(arm.BASE_JOINT).setAngle(Math.PI / -2);
 		pose = new Pose(0, -142, 40, 0, 0, 0);
 		checkError(arm, pose);
 
@@ -121,11 +124,11 @@ public class ArmTest
 	@Test
 	public void testTurretAngleDoesntAffectZ()
 	{
-		ArmKinematics arm = defineArm();
+		TestArmKinematics arm = defineArm();
 		Double z = arm.getEndEffectorPose().getZ();
 		for (double a = -Math.PI; a < Math.PI; a += Math.PI / 10.0)
 		{
-			arm.getComputationalPoses(null).get(TestArmKinematics.TURRET_JOINT_DEF).setAngle(a);
+			arm.getJoint(arm.TURRET_JOINT).setAngle(a);
 			System.out.println(z + " " + arm.getEndEffectorPose().getZ());
 			assertTrue(Math.abs(arm.getEndEffectorPose().getZ() - z) < .1);
 
@@ -135,11 +138,11 @@ public class ArmTest
 	@Test
 	public void testArmBaseAngleDoesntAffectX()
 	{
-		ArmKinematics arm = defineArm();
+		TestArmKinematics arm = defineArm();
 		Double x = arm.getEndEffectorPose().getX();
 		for (double a = -Math.PI; a < Math.PI; a += Math.PI / 10.0)
 		{
-			arm.getComputationalPoses(null).get(TestArmKinematics.BASE_JOINT_DEF).setAngle(a);
+			arm.getJoint(arm.BASE_JOINT).setAngle(a);
 			System.out.println(x + " " + arm.getEndEffectorPose().getX());
 			assertTrue(Math.abs(arm.getEndEffectorPose().getX() - x) < .1);
 
@@ -149,11 +152,11 @@ public class ArmTest
 	@Test
 	public void testArmMidAngleDoesntAffectX()
 	{
-		ArmKinematics arm = defineArm();
+		TestArmKinematics arm = defineArm();
 		Double x = arm.getEndEffectorPose().getX();
 		for (double a = -Math.PI; a < Math.PI; a += Math.PI / 10.0)
 		{
-			arm.getComputationalPoses(null).get(TestArmKinematics.CENTRE_JOINT_DEF).setAngle(a);
+			arm.getJoint(arm.CENTER_JOINT).setAngle(a);
 			System.out.println(x + " " + arm.getEndEffectorPose().getX());
 			assertTrue(Math.abs(arm.getEndEffectorPose().getX() - x) < .1);
 
@@ -247,7 +250,7 @@ public class ArmTest
 
 	}
 
-	private ArmKinematics defineArm()
+	private TestArmKinematics defineArm()
 	{
 		
 		return new TestArmKinematics();
@@ -277,9 +280,7 @@ public class ArmTest
 		ArmKinematics arm = defineArm();
 
 		// all angles zero
-		arm.getComputationalPoses(null).get(TestArmKinematics.TURRET_JOINT_DEF).setAngle(0);
-		arm.getComputationalPoses(null).get(TestArmKinematics.BASE_JOINT_DEF).setAngle(0);
-		arm.getComputationalPoses(null).get(TestArmKinematics.CENTRE_JOINT_DEF).setAngle(0);
+		arm.resetJointsToZero();
 
 		Pose pose = new Pose(0, 20, 202, 0, 0, 0);
 
