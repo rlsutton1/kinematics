@@ -79,14 +79,14 @@ public abstract class ArmKinematics
 	 * @param definition
 	 * @return
 	 */
-	private Map<Segment, Link> getSegments(Segment key)
+	private Map<Segment, Link> getSegments(Segment segment)
 	{
 		Map<Segment, Link> results = new LinkedHashMap<>();
 
 		for (Entry<Segment, Link> def : segments.entrySet())
 		{
 			results.put(def.getKey(), def.getValue());
-			if (def.getKey() == key)
+			if (def.getKey() == segment)
 				break;
 		}
 		return results;
@@ -130,12 +130,12 @@ public abstract class ArmKinematics
 		return frame;
 	}
 
-	public Pose getSegmentPose(Segment key)
+	public Pose getSegmentPose(Segment segmentKey)
 	{
 
 		Pose ret = new Pose(Vector3D.ZERO, new Rotation(RotationOrder.XYZ, 0.0,
 				0.0, 0.0));
-		for (Link segment : getSegments(key).values())
+		for (Link segment : getSegments(segmentKey).values())
 		{
 			ret = ret.compound(segment);
 		}
@@ -143,15 +143,13 @@ public abstract class ArmKinematics
 	}
 
 	/**
-	 * this method is not intended for public use, it's expected to be used by
-	 * InvKinematics to set joint angles
 	 * 
-	 * @param key
-	 * @return
+	 * @param segment
+	 * @param angleRadians
 	 */
-	public void setJointAngle(Segment key, double angleRadians)
+	public void setJointAngle(Segment segment, double angleRadians)
 	{
-		accessJoint(key).setAngle(angleRadians);
+		accessJoint(segment).setAngle(angleRadians);
 	}
 
 	public Pose getEndEffectorPose()
@@ -159,17 +157,22 @@ public abstract class ArmKinematics
 		return getSegmentPose(null);
 	}
 
-	public double getComputedJointAngle(Segment key)
+	/**
+	 * 
+	 * @param segment
+	 * @return angle of the joint in radians
+	 */
+	public double getComputedJointAngle(Segment segment)
 	{
-		return accessJoint(key).getSetAngle();
+		return accessJoint(segment).getSetAngle();
 	}
 
-	private Joint accessJoint(Segment key)
+	private Joint accessJoint(Segment segment)
 	{
-		Link joint = segments.get(key);
+		Link joint = segments.get(segment);
 		if (!(joint instanceof Joint))
 		{
-			throw new RuntimeException(key + " is not a joint");
+			throw new RuntimeException(segment + " is not a joint");
 		}
 		return (Joint) joint;
 	}
