@@ -45,9 +45,9 @@ public class ArmTest
 	// double zdiff = Math.abs(pose.transform.transform.getZ()
 	// - endPoint.transform.transform.getZ());
 	//
-	// System.out.println(arm.getJoint("Turret").getJointAngle());
-	// System.out.println(arm.getJoint("Arm Base").getJointAngle());
-	// System.out.println(arm.getJoint("Arm Center").getJointAngle());
+	// System.out.println(arm.setJointAngle("Turret").setJointAngleAngle());
+	// System.out.println(arm.setJointAngle("Arm Base").setJointAngleAngle());
+	// System.out.println(arm.setJointAngle("Arm Center").setJointAngleAngle());
 	// System.out.println(x + " " + y + " " + z + " got " + endPoint);
 	// System.out.println(xdiff + " " + ydiff + " " + zdiff);
 	// assertTrue(xdiff < 2 && ydiff < 2 && zdiff < 2);
@@ -89,15 +89,15 @@ public class ArmTest
 	public void testJoint1()
 	{
 		TestArmKinematics arm = defineArm();
-		arm.getJoint(arm.TURRET_JOINT).setAngle(0);
+		arm.setJointAngle(arm.TURRET_JOINT,0);
 		Pose pose = new Pose(0, 20, 202, 0, 0, 0);
 		checkError(arm, pose);
 
-		arm.getJoint(arm.TURRET_JOINT).setAngle(Math.PI / -2);
+		arm.setJointAngle(arm.TURRET_JOINT,Math.PI / -2);
 		pose = new Pose(-20, 0, 202, 0, 0, 0);
 		checkError(arm, pose);
 
-		arm.getJoint(arm.TURRET_JOINT).setAngle(Math.PI / 2);
+		arm.setJointAngle(arm.TURRET_JOINT,Math.PI / 2);
 		pose = new Pose(20, 0, 202, 0, 0, 0);
 		checkError(arm, pose);
 
@@ -107,15 +107,15 @@ public class ArmTest
 	public void testJoint2()
 	{
 		TestArmKinematics arm = defineArm();
-		arm.getJoint(arm.BASE_JOINT).setAngle(0);
+		arm.setJointAngle(arm.BASE_JOINT,0);
 		Pose pose = new Pose(0, 20, 202, 0, 0, 0);
 		checkError(arm, pose);
 
-		arm.getJoint(arm.BASE_JOINT).setAngle(Math.PI / 2);
+		arm.setJointAngle(arm.BASE_JOINT,Math.PI / 2);
 		pose = new Pose(0, 182, 40, 0, 0, 0);
 		checkError(arm, pose);
 
-		arm.getJoint(arm.BASE_JOINT).setAngle(Math.PI / -2);
+		arm.setJointAngle(arm.BASE_JOINT,Math.PI / -2);
 		pose = new Pose(0, -142, 40, 0, 0, 0);
 		checkError(arm, pose);
 
@@ -128,7 +128,7 @@ public class ArmTest
 		Double z = arm.getEndEffectorPose().getZ();
 		for (double a = -Math.PI; a < Math.PI; a += Math.PI / 10.0)
 		{
-			arm.getJoint(arm.TURRET_JOINT).setAngle(a);
+			arm.setJointAngle(arm.TURRET_JOINT,a);
 			System.out.println(z + " " + arm.getEndEffectorPose().getZ());
 			assertTrue(Math.abs(arm.getEndEffectorPose().getZ() - z) < .1);
 
@@ -142,7 +142,7 @@ public class ArmTest
 		Double x = arm.getEndEffectorPose().getX();
 		for (double a = -Math.PI; a < Math.PI; a += Math.PI / 10.0)
 		{
-			arm.getJoint(arm.BASE_JOINT).setAngle(a);
+			arm.setJointAngle(arm.BASE_JOINT,a);
 			System.out.println(x + " " + arm.getEndEffectorPose().getX());
 			assertTrue(Math.abs(arm.getEndEffectorPose().getX() - x) < .1);
 
@@ -156,7 +156,7 @@ public class ArmTest
 		Double x = arm.getEndEffectorPose().getX();
 		for (double a = -Math.PI; a < Math.PI; a += Math.PI / 10.0)
 		{
-			arm.getJoint(arm.CENTER_JOINT).setAngle(a);
+			arm.setJointAngle(arm.CENTER_JOINT,a);
 			System.out.println(x + " " + arm.getEndEffectorPose().getX());
 			assertTrue(Math.abs(arm.getEndEffectorPose().getX() - x) < .1);
 

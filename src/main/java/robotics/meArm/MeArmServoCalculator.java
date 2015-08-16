@@ -63,19 +63,19 @@ public class MeArmServoCalculator extends MeArmKinematics
 
 	public void setTurretAngle(double i)
 	{
-		getJoint(TURRET_JOINT).setAngle(i);
+		setJointAngle(TURRET_JOINT,i);
 
 	}
 
 	public void setArmBaseAngle(double radians)
 	{
-		getJoint(BASE_JOINT).setAngle(radians);
+		setJointAngle(BASE_JOINT,radians);
 
 	}
 
 	public void setArmCenterAngle(double radians)
 	{
-		getJoint(CENTER_JOINT).setAngle(radians);
+		setJointAngle(CENTER_JOINT,radians);
 
 	}
 }

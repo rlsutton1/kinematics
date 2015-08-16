@@ -19,7 +19,7 @@ public abstract class ArmKinematics
 	/**
 	 * Maps the name of a segment Definition to that Definition
 	 */
-	private Map<Segment, Link> segments = new LinkedHashMap<>();
+	final private Map<Segment, Link> segments = new LinkedHashMap<>();
 
 	private Frame frame;
 
@@ -28,7 +28,13 @@ public abstract class ArmKinematics
 
 	public static class Segment
 	{
-		boolean isJoint = false;
+		String name;
+
+		@Override
+		public String toString()
+		{
+			return name;
+		}
 	}
 
 	public ArmKinematics(Frame frame, Pose pose)
@@ -49,6 +55,7 @@ public abstract class ArmKinematics
 	public Segment add(Link link)
 	{
 		Segment segment = new Segment();
+		segment.name = link.getName();
 		segments.put(segment, link);
 		return segment;
 	}
@@ -56,14 +63,13 @@ public abstract class ArmKinematics
 	public Segment add(Joint joint)
 	{
 		Segment segment = new Segment();
-		segment.isJoint = true;
+		segment.name = joint.getName();
 		segments.put(segment, joint);
 		return segment;
 	}
 
 	/**
-	 * Returns a list of Links and joints  up to and including
-	 * the given Segment.
+	 * Returns a list of Links and joints up to and including the given Segment.
 	 * 
 	 * If the Segment is null then all Joints and Links are returned.
 	 * 
@@ -140,9 +146,9 @@ public abstract class ArmKinematics
 	 * @param key
 	 * @return
 	 */
-	public Joint getJoint(Segment key)
+	public void setJointAngle(Segment key, double angleRadians)
 	{
-		return (Joint) segments.get(key);
+		accessJoint(key).setAngle(angleRadians);
 	}
 
 	public Pose getEndEffectorPose()
@@ -150,9 +156,19 @@ public abstract class ArmKinematics
 		return getSegmentPose(null);
 	}
 
-	public double getComputedJointAngle(Segment definition)
+	public double getComputedJointAngle(Segment key)
 	{
-		return getJoint(definition).getSetAngle();
+		return accessJoint(key).getSetAngle();
+	}
+
+	private Joint accessJoint(Segment key)
+	{
+		Link joint = segments.get(key);
+		if (!(joint instanceof Joint))
+		{
+			throw new RuntimeException(key + " is not a joint");
+		}
+		return (Joint) joint;
 	}
 
 }

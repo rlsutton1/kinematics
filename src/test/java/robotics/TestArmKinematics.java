@@ -3,7 +3,6 @@ package robotics;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import robotics.arm.ArmKinematics;
-import robotics.arm.Axis;
 import robotics.arm.InvKinematics;
 import robotics.arm.Joint;
 import robotics.arm.Link;
@@ -52,7 +51,7 @@ public class TestArmKinematics extends ArmKinematics
 
 				double turretAngle = Math.atan2(x, y);
 
-				arm.getJoint(TURRET_JOINT).setAngle(turretAngle);
+				arm.setJointAngle(TURRET_JOINT,turretAngle);
 				Vector3D armBase = arm.getSegmentPose(BASE_JOINT)
 						.getTransform().getVector();
 
@@ -80,8 +79,8 @@ public class TestArmKinematics extends ArmKinematics
 
 				double baseAngle = Math.atan2(x, z) - (midArmAngle / 2.0);
 
-				arm.getJoint(BASE_JOINT).setAngle(baseAngle);
-				arm.getJoint(CENTER_JOINT).setAngle(midArmAngle);
+				arm.setJointAngle(BASE_JOINT,baseAngle);
+				arm.setJointAngle(CENTER_JOINT,midArmAngle);
 
 			}
 

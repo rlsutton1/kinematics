@@ -1,4 +1,4 @@
-package robotics.arm;
+package robotics;
 
 /**
  * Each Joint is described based on the type of motion it imparts to the link that it controls.

@@ -3,6 +3,8 @@ package robotics.arm;
 import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
 import org.apache.commons.math3.geometry.euclidean.threed.RotationOrder;
 
+import robotics.Axis;
+
 /**
  * Used by Kinematics to make calculations about a definition as a pose is
  * calculated.
