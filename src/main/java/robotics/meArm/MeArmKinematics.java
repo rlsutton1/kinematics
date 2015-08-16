@@ -9,8 +9,6 @@ import robotics.Pose;
 import robotics.Transform;
 import robotics.arm.ArmKinematics;
 import robotics.arm.InvKinematics;
-import robotics.arm.Joint;
-import robotics.arm.Link;
 
 public class MeArmKinematics extends ArmKinematics
 {
@@ -28,17 +26,15 @@ public class MeArmKinematics extends ArmKinematics
 	{
 		super(Frame.getWorldFrame(), new Pose(0, 0, 0, 0, 0, 0));
 
-		
 		// define our arms characteristics
-		BASE_TO_SERVO = add(new Link("Base to Servo", 0, 0, 20, 0, 0, 0));
-		TURRET_JOINT = add(new Joint("", Axis.YAW, 0, 0, 0));
-		TURRET_TO_ARM_BASE = add(new Link("Turret to arm Base", 0, 20, 20, 0,
-				0, 0));
-		BASE_JOINT = add(new Joint("", Axis.PITCH, 0, 0, 0));
-		ARM_SEGMENT1 = add(new Link("Arm segment 1", 0, 0, 81, 0, 0, 0));
-		CENTER_JOINT = add(new Joint("", Axis.PITCH, 0, 0, 0));
-		ARM_SEGMENT2 = add(new Link("Arm segment 2", 0, 0, 81, 0, 0, 0));
-		WRIST_JOINT = add(new Joint("", Axis.PITCH, 0, 0, 0));
+		BASE_TO_SERVO = addLink("Base to Servo", 0, 0, 20, 0, 0, 0);
+		TURRET_JOINT = addJoint("", Axis.YAW, 0, 0, 0);
+		TURRET_TO_ARM_BASE = addLink("Turret to arm Base", 0, 20, 20, 0, 0, 0);
+		BASE_JOINT = addJoint("", Axis.PITCH, 0, 0, 0);
+		ARM_SEGMENT1 = addLink("Arm segment 1", 0, 0, 81, 0, 0, 0);
+		CENTER_JOINT = addJoint("", Axis.PITCH, 0, 0, 0);
+		ARM_SEGMENT2 = addLink("Arm segment 2", 0, 0, 81, 0, 0, 0);
+		WRIST_JOINT = addJoint("", Axis.PITCH, 0, 0, 0);
 
 		setInvKinematics(getInvKinematics());
 	}
@@ -58,7 +54,7 @@ public class MeArmKinematics extends ArmKinematics
 
 				double turretAngle = Math.atan2(x, y);
 
-				arm.setJointAngle(TURRET_JOINT,turretAngle);
+				arm.setJointAngle(TURRET_JOINT, turretAngle);
 				Vector3D armBase = arm.getSegmentPose(BASE_JOINT)
 						.getTransform().getVector();
 
@@ -86,8 +82,8 @@ public class MeArmKinematics extends ArmKinematics
 
 				double baseAngle = Math.atan2(x, z) - (midArmAngle / 2.0);
 
-				arm.setJointAngle(BASE_JOINT,baseAngle);
-				arm.setJointAngle(CENTER_JOINT,midArmAngle);
+				arm.setJointAngle(BASE_JOINT, baseAngle);
+				arm.setJointAngle(CENTER_JOINT, midArmAngle);
 
 			}
 

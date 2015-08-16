@@ -12,7 +12,7 @@ import robotics.Axis;
  * @author bsutton
  *
  */
-public class Joint extends Link
+class Joint extends Link
 {
 	private double[] angles;
 
@@ -30,7 +30,7 @@ public class Joint extends Link
 	 * @param pitch
 	 * @param yaw
 	 */
-	public Joint(String name, Axis axis, double roll, double pitch, double yaw)
+	Joint(String name, Axis axis, double roll, double pitch, double yaw)
 	{
 		super(name, 0, 0, 0, roll, pitch, yaw);
 		this.axis = axis;
@@ -38,7 +38,7 @@ public class Joint extends Link
 		currentAngle = 0;
 	}
 
-	public void setAngle(double angle)
+	void setAngle(double angle)
 	{
 		currentAngle = angle;
 		setRotation(new Rotation(RotationOrder.XYZ, angles[0]
@@ -50,7 +50,7 @@ public class Joint extends Link
 
 	}
 
-	public double getSetAngle()
+	double getSetAngle()
 	{
 		return currentAngle;
 	}

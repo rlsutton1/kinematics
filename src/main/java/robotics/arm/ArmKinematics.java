@@ -8,6 +8,7 @@ import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
 import org.apache.commons.math3.geometry.euclidean.threed.RotationOrder;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
+import robotics.Axis;
 import robotics.Frame;
 import robotics.Pose;
 
@@ -52,19 +53,21 @@ public abstract class ArmKinematics
 	 * @param link
 	 * @throws DuplicateDefinition
 	 */
-	public Segment add(Link link)
+	public Segment addLink(String name, double x, double y, double z,
+			double roll, double pitch, double yaw)
 	{
 		Segment segment = new Segment();
-		segment.name = link.getName();
-		segments.put(segment, link);
+		segment.name = name;
+		segments.put(segment, new Link(name, x, y, z, roll, pitch, yaw));
 		return segment;
 	}
 
-	public Segment add(Joint joint)
+	public Segment addJoint(String name, Axis axis, double roll, double pitch,
+			double yaw)
 	{
 		Segment segment = new Segment();
-		segment.name = joint.getName();
-		segments.put(segment, joint);
+		segment.name = name;
+		segments.put(segment, new Joint(name, axis, roll, pitch, yaw));
 		return segment;
 	}
 
