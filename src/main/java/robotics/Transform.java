@@ -85,10 +85,10 @@ public class Transform
 	}
 
 	/**
-	 * Subtracts this transform from the given point.
+	 * Subtracts the given point this transform.
 	 * 
 	 * Essentially vector maths is applied:
-	 * pointToTransform - transform = returned point 
+	 * transform - pointToTransform = returned point 
 	 * 
 	 * @param pointToTransform - the point that this transform is to be applied to.
 	 * 
@@ -96,7 +96,7 @@ public class Transform
 	 */
 	public Point3D subtract(Vector3D pointToTransform)
 	{
-		return new Point3D(pointToTransform.subtract(transform));
+		return new Point3D(transform.subtract(pointToTransform));
 	}
 
 	public void getRotation()

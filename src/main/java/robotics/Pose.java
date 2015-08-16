@@ -109,8 +109,7 @@ public class Pose
 			nf.setMaximumFractionDigits(1);
 			return getTransform() + " " + nf.format(getAngle(0)) + " "
 					+ nf.format(getAngle(1)) + " " + nf.format(getAngle(2));
-		}
-		catch (CardanEulerSingularityException e)
+		} catch (CardanEulerSingularityException e)
 		{
 			return "Singularity";
 		}
@@ -184,6 +183,12 @@ public class Pose
 	public Transform getTransform()
 	{
 		return transform;
+	}
+
+	public double getXAngle()
+	{
+		double[] angles = rotation.getAngles(RotationOrder.XYZ);
+		return angles[0];
 	}
 
 }
