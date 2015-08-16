@@ -175,6 +175,11 @@ public abstract class ArmKinematics
 		return accessJoint(segment).getSetAngle();
 	}
 
+	/**
+	 * ensure that we dont try to access a Link as a Joint
+	 * @param segment
+	 * @return
+	 */
 	private Joint accessJoint(Segment segment)
 	{
 		Link joint = segments.get(segment);
