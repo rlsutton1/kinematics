@@ -44,7 +44,7 @@ public class MeArmKinematics extends ArmKinematics
 		return new InvKinematics()
 		{
 
-			public void determine(ArmKinematics arm, Pose endEffectorPose)
+			public void determine(Pose endEffectorPose)
 			{
 
 				// determine and set turret angle
@@ -54,8 +54,8 @@ public class MeArmKinematics extends ArmKinematics
 
 				double turretAngle = Math.atan2(x, y);
 
-				arm.setJointAngle(TURRET_JOINT, turretAngle);
-				Vector3D armBase = arm.getSegmentPose(BASE_JOINT)
+				setJointAngle(TURRET_JOINT, turretAngle);
+				Vector3D armBase = getSegmentPose(BASE_JOINT)
 						.getTransform().getVector();
 
 				// calculate distance between armBase and wrist
@@ -75,15 +75,15 @@ public class MeArmKinematics extends ArmKinematics
 				// atan(changeInXY/changeInZ)
 
 				double z = endEffectorPose.getZ() - armBase.getZ();
-				x = new Transform(new Point3D(arm.getFrame(),
+				x = new Transform(new Point3D(getFrame(),
 						endEffectorPose.getX(), endEffectorPose.getY(), 0),
-						new Point3D(arm.getFrame(), armBase.getX(), armBase
+						new Point3D(getFrame(), armBase.getX(), armBase
 								.getY(), 0)).getDistance();
 
 				double baseAngle = Math.atan2(x, z) - (midArmAngle / 2.0);
 
-				arm.setJointAngle(BASE_JOINT, baseAngle);
-				arm.setJointAngle(CENTER_JOINT, midArmAngle);
+				setJointAngle(BASE_JOINT, baseAngle);
+				setJointAngle(CENTER_JOINT, midArmAngle);
 
 			}
 
