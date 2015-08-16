@@ -123,7 +123,7 @@ public abstract class ArmKinematics
 	 */
 	public void setPosition(Pose endEffectorLink)
 	{
-		invKinematics.determine(this, endEffectorLink);
+		invKinematics.determine(endEffectorLink);
 
 	}
 
@@ -177,6 +177,7 @@ public abstract class ArmKinematics
 
 	/**
 	 * ensure that we dont try to access a Link as a Joint
+	 * 
 	 * @param segment
 	 * @return
 	 */
@@ -188,6 +189,16 @@ public abstract class ArmKinematics
 			throw new RuntimeException(segment + " is not a joint");
 		}
 		return (Joint) joint;
+	}
+
+	public Link getLink(Segment segment)
+	{
+		Link link = segments.get(segment);
+		if (link instanceof Joint)
+		{
+			throw new RuntimeException(segment + " is not a link");
+		}
+		return link;
 	}
 
 }

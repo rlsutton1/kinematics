@@ -2,7 +2,7 @@ package robotics.arm;
 
 import robotics.Pose;
 
-class Link extends Pose
+public class Link extends Pose
 {
 
 	Link(String name, double x, double y, double z, double roll, double pitch,
