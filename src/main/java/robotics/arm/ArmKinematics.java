@@ -1,6 +1,8 @@
 package robotics.arm;
 
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -79,13 +81,13 @@ public abstract class ArmKinematics
 	 * @param definition
 	 * @return
 	 */
-	private Map<Segment, Link> getSegments(Segment segment)
+	private List<Pose> getSegmentPoses(Segment segment)
 	{
-		Map<Segment, Link> results = new LinkedHashMap<>();
+		List<Pose> results = new LinkedList<>();
 
 		for (Entry<Segment, Link> def : segments.entrySet())
 		{
-			results.put(def.getKey(), def.getValue());
+			results.add(def.getValue());
 			if (def.getKey() == segment)
 				break;
 		}
@@ -130,14 +132,20 @@ public abstract class ArmKinematics
 		return frame;
 	}
 
-	public Pose getSegmentPose(Segment segmentKey)
+	/**
+	 * determine the pose of "segment" in the frame of the arm
+	 * 
+	 * @param segment
+	 * @return
+	 */
+	public Pose getSegmentPose(Segment segment)
 	{
 
 		Pose ret = new Pose(Vector3D.ZERO, new Rotation(RotationOrder.XYZ, 0.0,
 				0.0, 0.0));
-		for (Link segment : getSegments(segmentKey).values())
+		for (Pose pose : getSegmentPoses(segment))
 		{
-			ret = ret.compound(segment);
+			ret = ret.compound(pose);
 		}
 		return ret;
 	}
