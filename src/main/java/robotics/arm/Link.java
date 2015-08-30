@@ -11,4 +11,9 @@ public class Link extends Pose
 		super(name, x, y, z, roll, pitch, yaw);
 	}
 
+	public Link(DefineLink linkDef)
+	{
+		super(linkDef.getName(),linkDef.getX(),linkDef.getY(),linkDef.getZ(),linkDef.getRoll(),linkDef.getPitch(),linkDef.getYaw());
+	}
+
 }

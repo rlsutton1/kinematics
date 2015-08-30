@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import robotics.arm.IllegalJointAngleException;
 import robotics.meArm.MeArmServoCalculator;
 import robotics.servos.ServoAngleToPwmCalculator;
 
@@ -12,7 +13,7 @@ public class ServoAngleToPwmCalculatorTest
 
 	
 	@Test
-	public void testta()
+	public void testta() throws IllegalJointAngleException
 	{
 		MeArmServoCalculator arm = new MeArmServoCalculator();
 

@@ -5,13 +5,14 @@ import static org.junit.Assert.assertTrue;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.junit.Test;
 
+import robotics.arm.IllegalJointAngleException;
 import robotics.meArm.MeArmKinematics;
 
 public class MeArmTest
 {
 
 	@Test
-	public void testArmExtensionInXYZ()
+	public void testArmExtensionInXYZ() throws IllegalJointAngleException
 	{
 		// y= forward
 

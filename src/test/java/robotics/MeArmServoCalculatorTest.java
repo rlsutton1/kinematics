@@ -2,13 +2,14 @@ package robotics;
 
 import org.junit.Test;
 
+import robotics.arm.IllegalJointAngleException;
 import robotics.meArm.MeArmServoCalculator;
 
 public class MeArmServoCalculatorTest
 {
 
 	@Test
-	public void test1()
+	public void test1() throws IllegalJointAngleException
 	{
 		MeArmServoCalculator arm = new MeArmServoCalculator();
 		
@@ -21,7 +22,7 @@ public class MeArmServoCalculatorTest
 	}
 	
 	@Test
-	public void test()
+	public void test() throws IllegalJointAngleException
 	{
 		MeArmServoCalculator arm = new MeArmServoCalculator();
 		Pose pose = new Pose(0, 0, 50, 0, 0, 0);

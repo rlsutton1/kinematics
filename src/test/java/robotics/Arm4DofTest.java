@@ -9,12 +9,13 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3DFormat;
 import org.junit.Test;
 
 import robotics.arm.ArmKinematics;
+import robotics.arm.IllegalJointAngleException;
 
 public class Arm4DofTest
 {
 
 	@Test
-	public void testArmExtensionInXYZplusPose()
+	public void testArmExtensionInXYZplusPose() throws IllegalJointAngleException
 	{
 		// y= forward
 

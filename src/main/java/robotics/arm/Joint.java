@@ -20,6 +20,10 @@ class Joint extends Link
 
 	private double currentAngle;
 
+	private double minAngle;
+
+	private double maxAngle;
+
 	/**
 	 * a joint is a mutable. and used by ArmKinematics to represent the
 	 * mathematical state of the arm
@@ -38,21 +42,71 @@ class Joint extends Link
 		currentAngle = 0;
 	}
 
-	void setAngle(double angle)
+	public Joint(DefineJoint jointDef)
 	{
-		currentAngle = angle;
+		super(jointDef.getName(), 0, 0, 0, jointDef.getRoll(), jointDef
+				.getPitch(), jointDef.getYaw());
+		this.axis = jointDef.getAxis();
+		this.angles = getRotation().getAngles(RotationOrder.XYZ);
+		minAngle = jointDef.getMinAngleRadians();
+		maxAngle = jointDef.getMaxAngleRadians();
+		currentAngle = 0;
+	}
+
+	void setAngle(double angle) throws IllegalJointAngleException
+	{
+		currentAngle = checkJointAngle(angle, getMinAngle(), getMaxAngle());
+
 		setRotation(new Rotation(RotationOrder.XYZ, angles[0]
-				+ axis.getRotatedAngle(angle, Axis.PITCH),
+				+ axis.getRotatedAngle(currentAngle, Axis.PITCH),
 
-		angles[1] + axis.getRotatedAngle(angle, Axis.ROLL),
+		angles[1] + axis.getRotatedAngle(currentAngle, Axis.ROLL),
 
-		angles[2] + axis.getRotatedAngle(angle, Axis.YAW)));
+		angles[2] + axis.getRotatedAngle(currentAngle, Axis.YAW)));
 
 	}
 
-	double getSetAngle()
+	double getAngle()
 	{
 		return currentAngle;
+	}
+
+	public double getMaxAngle()
+	{
+		return maxAngle;
+	}
+
+	public double getMinAngle()
+	{
+		return minAngle;
+	}
+
+	public double getActuatorAngle() 
+	{
+		return getAngle();
+	}
+
+	protected double checkJointAngle(double absoluteAngle, double min,
+			double max) throws IllegalJointAngleException
+	{
+		if (absoluteAngle > max)
+		{
+			absoluteAngle -= Math.PI * 2.0;
+		}
+		if (absoluteAngle < min)
+		{
+			absoluteAngle += Math.PI * 2.0;
+		}
+		if (min != max && (min < absoluteAngle || max > absoluteAngle))
+		{
+
+			// try moving into correct quadrant before throwing exception
+
+			throw new IllegalJointAngleException(
+					"Attempt to set joint angle out of bounds " + absoluteAngle
+							+ " is not " + min + " < X < " + max);
+		}
+		return absoluteAngle;
 	}
 
 }

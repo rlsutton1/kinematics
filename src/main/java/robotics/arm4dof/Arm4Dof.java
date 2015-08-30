@@ -10,6 +10,7 @@ import robotics.Point3D;
 import robotics.Pose;
 import robotics.Transform;
 import robotics.arm.ArmKinematics;
+import robotics.arm.IllegalJointAngleException;
 import robotics.arm.InvKinematics;
 
 public class Arm4Dof extends ArmKinematics
@@ -49,7 +50,7 @@ public class Arm4Dof extends ArmKinematics
 		return new InvKinematics()
 		{
 
-			public void determine(Pose tipPose)
+			public void determine(Pose tipPose) throws IllegalJointAngleException
 			{
 
 				// determine and set turret angle
@@ -61,7 +62,7 @@ public class Arm4Dof extends ArmKinematics
 
 				double turretAngle = Math.atan2(x, y);
 
-				setJointAngle(TURRET_JOINT, turretAngle);
+				TURRET_JOINT.setJointAngle(turretAngle);
 				Vector3D armBase = getSegmentPose(BASE_JOINT).getTransform()
 						.getVector();
 
@@ -92,14 +93,14 @@ public class Arm4Dof extends ArmKinematics
 
 				double baseAngle = Math.atan2(x, z) - (midArmAngle / 2.0);
 
-				setJointAngle(BASE_JOINT, baseAngle);
-				setJointAngle(CENTER_JOINT, midArmAngle);
+				BASE_JOINT.setJointAngle(baseAngle);
+				CENTER_JOINT.setJointAngle( midArmAngle);
 
 				// compensate the desired tip pose angle for the pose of the
 				// wrist angle
 				double wristAngle = tipPose.getXAngle()
 						- getSegmentPose(WRIST_JOINT).getXAngle();
-				setJointAngle(WRIST_JOINT, wristAngle);
+				WRIST_JOINT.setJointAngle( wristAngle);
 
 			}
 

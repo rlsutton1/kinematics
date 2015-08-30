@@ -5,6 +5,7 @@ import org.apache.commons.math3.geometry.euclidean.threed.RotationOrder;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import robotics.arm.ArmKinematics;
+import robotics.arm.IllegalJointAngleException;
 import robotics.arm.InvKinematics;
 import robotics.arm.Link;
 
@@ -45,7 +46,7 @@ public class TestArmKinematics extends ArmKinematics
 		return new InvKinematics()
 		{
 
-			public void determine(Pose tipPose)
+			public void determine(Pose tipPose) throws IllegalJointAngleException
 			{
 
 				// determine and set turret angle
@@ -57,7 +58,7 @@ public class TestArmKinematics extends ArmKinematics
 
 				double turretAngle = Math.atan2(x, y);
 
-				setJointAngle(TURRET_JOINT, turretAngle);
+				TURRET_JOINT.setJointAngle( turretAngle);
 				Vector3D armBase = getSegmentPose(BASE_JOINT).getTransform()
 						.getVector();
 
@@ -88,12 +89,12 @@ public class TestArmKinematics extends ArmKinematics
 
 				double baseAngle = Math.atan2(x, z) - (midArmAngle / 2.0);
 
-				setJointAngle(BASE_JOINT, baseAngle);
-				setJointAngle(CENTER_JOINT, midArmAngle);
+				BASE_JOINT.setJointAngle( baseAngle);
+				CENTER_JOINT.setJointAngle( midArmAngle);
 
 				double wristAngle = tipPose.getXAngle()
 						- getSegmentPose(WRIST_JOINT).getXAngle();
-				setJointAngle(WRIST_JOINT, wristAngle);
+				WRIST_JOINT.setJointAngle( wristAngle);
 
 			}
 

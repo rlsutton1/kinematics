@@ -5,5 +5,5 @@ import robotics.Pose;
 public interface InvKinematics
 {
 
-	public void determine(Pose endEffectorPose);
+	public void determine(Pose endEffectorPose) throws IllegalJointAngleException;
 }

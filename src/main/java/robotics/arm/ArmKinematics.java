@@ -29,9 +29,42 @@ public abstract class ArmKinematics
 	@SuppressWarnings("unused")
 	private Pose pose;
 
-	public static class Segment
+	final public static class Segment
 	{
 		String name;
+
+		// Link link;
+		Joint joint;
+
+		public void setJointAngle(double angle) throws IllegalJointAngleException
+		{
+			if (joint == null)
+			{
+				throw new RuntimeException("This segment " + name
+						+ " is not a joint");
+			}
+			joint.setAngle(angle);
+		}
+
+		public double getJointAngle()
+		{
+			if (joint == null)
+			{
+				throw new RuntimeException("This segment " + name
+						+ " is not a joint");
+			}
+			return joint.getAngle();
+		}
+		
+		public double getActuatorAngle()
+		{
+			if (joint == null)
+			{
+				throw new RuntimeException("This segment " + name
+						+ " is not a joint");
+			}
+			return joint.getActuatorAngle();
+		}
 
 		@Override
 		public String toString()
@@ -55,6 +88,14 @@ public abstract class ArmKinematics
 	 * @param link
 	 * @throws DuplicateDefinition
 	 */
+	public Segment addLink(DefineLink linkDef)
+	{
+		Segment segment = new Segment();
+		segment.name = linkDef.getName();
+		segments.put(segment, new Link(linkDef));
+		return segment;
+	}
+
 	public Segment addLink(String name, double x, double y, double z,
 			double roll, double pitch, double yaw)
 	{
@@ -64,13 +105,45 @@ public abstract class ArmKinematics
 		return segment;
 	}
 
+	public Segment addJoint(DefineJoint jointDef)
+	{
+		Segment segment = new Segment();
+		segment.name = jointDef.getName();
+		segments.put(segment, new Joint(jointDef));
+		segment.joint = (Joint) segments.get(segment);
+		return segment;
+	}
+
 	public Segment addJoint(String name, Axis axis, double roll, double pitch,
 			double yaw)
 	{
 		Segment segment = new Segment();
 		segment.name = name;
 		segments.put(segment, new Joint(name, axis, roll, pitch, yaw));
+		segment.joint = (Joint) segments.get(segment);
 		return segment;
+	}
+
+	/**
+	 * 
+	 * @param endEffectorLink
+	 * @throws IllegalJointAngleException
+	 */
+	public void setPosition(Pose endEffectorLink)
+			throws IllegalJointAngleException
+	{
+		invKinematics.determine(endEffectorLink);
+
+	}
+
+	/**
+	 * 
+	 * @param segment
+	 * @return angle of the joint in radians
+	 */
+	private double getComputedJointAngle(Segment segment)
+	{
+		return accessJoint(segment).getAngle();
 	}
 
 	/**
@@ -106,7 +179,7 @@ public abstract class ArmKinematics
 
 	}
 
-	public void resetJointsToZero()
+	public void resetJointsToZero() throws IllegalJointAngleException
 	{
 		for (Link segment : segments.values())
 		{
@@ -115,16 +188,6 @@ public abstract class ArmKinematics
 				((Joint) segment).setAngle(0.0);
 			}
 		}
-	}
-
-	/**
-	 * 
-	 * @param endEffectorLink
-	 */
-	public void setPosition(Pose endEffectorLink)
-	{
-		invKinematics.determine(endEffectorLink);
-
 	}
 
 	public Frame getFrame()
@@ -154,25 +217,19 @@ public abstract class ArmKinematics
 	 * 
 	 * @param segment
 	 * @param angleRadians
+	 * @throws IllegalJointAngleException
 	 */
-	public void setJointAngle(Segment segment, double angleRadians)
+	private void setJointAngle(Segment segment, double angleRadians)
+			throws IllegalJointAngleException
 	{
-		accessJoint(segment).setAngle(angleRadians);
+		Joint joint = accessJoint(segment);
+		
+		joint.setAngle(angleRadians);
 	}
 
 	public Pose getEndEffectorPose()
 	{
 		return getSegmentPose(null);
-	}
-
-	/**
-	 * 
-	 * @param segment
-	 * @return angle of the joint in radians
-	 */
-	public double getComputedJointAngle(Segment segment)
-	{
-		return accessJoint(segment).getSetAngle();
 	}
 
 	/**

@@ -9,6 +9,7 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3DFormat;
 import org.junit.Test;
 
 import robotics.arm.ArmKinematics;
+import robotics.arm.IllegalJointAngleException;
 
 public class ArmTest
 {
@@ -89,21 +90,21 @@ public class ArmTest
 	}
 
 	@Test
-	public void testJoint1()
+	public void testJoint1() throws IllegalJointAngleException
 	{
 		TestArmKinematics arm = defineArm();
-		arm.setJointAngle(arm.TURRET_JOINT, 0);
+		arm.TURRET_JOINT.setJointAngle( 0);
 		Pose pose = new Pose(0, 20,
 				202 + TestArmKinematics.END_EFFECTOR_LENGTH, 0, 0, 0);
 
 		checkError(arm, pose);
 
-		arm.setJointAngle(arm.TURRET_JOINT, Math.PI / -2);
+		arm.TURRET_JOINT.setJointAngle( Math.PI / -2);
 		pose = new Pose(-20, 0, 202 + TestArmKinematics.END_EFFECTOR_LENGTH, 0,
 				0, 0);
 		checkError(arm, pose);
 
-		arm.setJointAngle(arm.TURRET_JOINT, Math.PI / 2);
+		arm.TURRET_JOINT.setJointAngle( Math.PI / 2);
 		pose = new Pose(20, 0, 202 + TestArmKinematics.END_EFFECTOR_LENGTH, 0,
 				0, 0);
 		checkError(arm, pose);
@@ -111,20 +112,20 @@ public class ArmTest
 	}
 
 	@Test
-	public void testJoint2()
+	public void testJoint2() throws IllegalJointAngleException
 	{
 		TestArmKinematics arm = defineArm();
-		arm.setJointAngle(arm.BASE_JOINT, 0);
+		arm.BASE_JOINT.setJointAngle( 0);
 		Pose pose = new Pose(0, 20,
 				202 + TestArmKinematics.END_EFFECTOR_LENGTH, 0, 0, 0);
 		checkError(arm, pose);
 
-		arm.setJointAngle(arm.BASE_JOINT, Math.PI / 2);
+		arm.BASE_JOINT.setJointAngle( Math.PI / 2);
 		pose = new Pose(0, 182 + TestArmKinematics.END_EFFECTOR_LENGTH, 40, 0,
 				0, 0);
 		checkError(arm, pose);
 
-		arm.setJointAngle(arm.BASE_JOINT, Math.PI / -2);
+		arm.BASE_JOINT.setJointAngle( Math.PI / -2);
 		pose = new Pose(0, -142 - TestArmKinematics.END_EFFECTOR_LENGTH, 40, 0,
 				0, 0);
 		checkError(arm, pose);
@@ -132,13 +133,13 @@ public class ArmTest
 	}
 
 	@Test
-	public void testTurretAngleDoesntAffectZ()
+	public void testTurretAngleDoesntAffectZ() throws IllegalJointAngleException
 	{
 		TestArmKinematics arm = defineArm();
 		Double z = arm.getEndEffectorPose().getZ();
 		for (double a = -Math.PI; a < Math.PI; a += Math.PI / 10.0)
 		{
-			arm.setJointAngle(arm.TURRET_JOINT, a);
+			arm.TURRET_JOINT.setJointAngle( a);
 			System.out.println(z + " " + arm.getEndEffectorPose().getZ());
 			assertTrue(Math.abs(arm.getEndEffectorPose().getZ() - z) < .1);
 
@@ -146,13 +147,13 @@ public class ArmTest
 	}
 
 	@Test
-	public void testArmBaseAngleDoesntAffectX()
+	public void testArmBaseAngleDoesntAffectX() throws IllegalJointAngleException
 	{
 		TestArmKinematics arm = defineArm();
 		Double x = arm.getEndEffectorPose().getX();
 		for (double a = -Math.PI; a < Math.PI; a += Math.PI / 10.0)
 		{
-			arm.setJointAngle(arm.BASE_JOINT, a);
+			arm.BASE_JOINT.setJointAngle( a);
 			System.out.println(x + " " + arm.getEndEffectorPose().getX());
 			assertTrue(Math.abs(arm.getEndEffectorPose().getX() - x) < .1);
 
@@ -160,13 +161,13 @@ public class ArmTest
 	}
 
 	@Test
-	public void testArmMidAngleDoesntAffectX()
+	public void testArmMidAngleDoesntAffectX() throws IllegalJointAngleException
 	{
 		TestArmKinematics arm = defineArm();
 		Double x = arm.getEndEffectorPose().getX();
 		for (double a = -Math.PI; a < Math.PI; a += Math.PI / 10.0)
 		{
-			arm.setJointAngle(arm.CENTER_JOINT, a);
+			arm.CENTER_JOINT.setJointAngle( a);
 			System.out.println(x + " " + arm.getEndEffectorPose().getX());
 			assertTrue(Math.abs(arm.getEndEffectorPose().getX() - x) < .1);
 
@@ -174,7 +175,7 @@ public class ArmTest
 	}
 
 	@Test
-	public void testArmExtensionInZ()
+	public void testArmExtensionInZ() throws IllegalJointAngleException
 	{
 		// y= forward
 
@@ -196,7 +197,7 @@ public class ArmTest
 	}
 
 	@Test
-	public void testArmExtensionInXYZ()
+	public void testArmExtensionInXYZ() throws IllegalJointAngleException
 	{
 		// y= forward
 
@@ -220,7 +221,7 @@ public class ArmTest
 	
 
 	@Test
-	public void testArmExtensionInXYZplusPose()
+	public void testArmExtensionInXYZplusPose() throws IllegalJointAngleException
 	{
 		// y= forward
 
@@ -244,7 +245,7 @@ public class ArmTest
 	}
 
 	@Test
-	public void testArmExtensionInY()
+	public void testArmExtensionInY() throws IllegalJointAngleException
 	{
 		// y= forward
 
@@ -266,7 +267,7 @@ public class ArmTest
 	}
 
 	@Test
-	public void testArmExtensionInX()
+	public void testArmExtensionInX() throws IllegalJointAngleException
 	{
 		// y= forward
 
@@ -294,7 +295,7 @@ public class ArmTest
 	}
 
 	@Test
-	public void testArmBase90Degrees()
+	public void testArmBase90Degrees() throws IllegalJointAngleException
 	{
 		// y= forward
 
@@ -311,7 +312,7 @@ public class ArmTest
 	}
 
 	@Test
-	public void testAllAnglesZero()
+	public void testAllAnglesZero() throws IllegalJointAngleException
 	{
 		// y= forward
 
@@ -329,7 +330,7 @@ public class ArmTest
 	}
 
 	@Test
-	public void testTurret45Degrees()
+	public void testTurret45Degrees() throws IllegalJointAngleException
 	{
 		// y= forward
 
@@ -345,7 +346,7 @@ public class ArmTest
 	}
 
 	@Test
-	public void testTurret22Degrees()
+	public void testTurret22Degrees() throws IllegalJointAngleException
 	{
 		// y= forward
 
@@ -361,7 +362,7 @@ public class ArmTest
 	}
 
 	@Test
-	public void testTurret90Degrees()
+	public void testTurret90Degrees() throws IllegalJointAngleException
 	{
 		// y= forward
 
