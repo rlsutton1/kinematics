@@ -45,7 +45,8 @@ public class MeArmKinematics extends ArmKinematics
 		return new InvKinematics()
 		{
 
-			public void determine(Pose endEffectorPose) throws IllegalJointAngleException
+			public void determine(Pose endEffectorPose)
+					throws IllegalJointAngleException
 			{
 
 				// determine and set turret angle
@@ -55,9 +56,9 @@ public class MeArmKinematics extends ArmKinematics
 
 				double turretAngle = Math.atan2(x, y);
 
-				TURRET_JOINT.setJointAngle( turretAngle);
-				Vector3D armBase = getSegmentPose(BASE_JOINT)
-						.getTransform().getVector();
+				TURRET_JOINT.setJointAngle(turretAngle);
+				Vector3D armBase = getSegmentPose(BASE_JOINT).getTransform()
+						.getVector();
 
 				// calculate distance between armBase and wrist
 				double extend = Vector3D.distance(armBase, endEffectorPose
@@ -66,9 +67,14 @@ public class MeArmKinematics extends ArmKinematics
 				// armBase).getDistance();
 
 				// calculate angle of the bend in the arm to give the desired
-				// length, assuming the two links are of the same length.
-				double linkLength = 81.0;
-				double midArmAngle = Math.acos(((extend / 2.0) / linkLength)) * 2.0;
+				// length
+				double upperArm = ARM_SEGMENT1.getLinkLength();
+				double foreArm = ARM_SEGMENT2.getLinkLength();
+				double c = extend;
+				double midArmAngle = Math.PI
+						- Math.acos((upperArm * upperArm + foreArm * foreArm - c
+								* c)
+								/ (2 * upperArm * foreArm));
 
 				// midArmAngle -= Math.PI;
 
@@ -78,13 +84,13 @@ public class MeArmKinematics extends ArmKinematics
 				double z = endEffectorPose.getZ() - armBase.getZ();
 				x = new Transform(new Point3D(getFrame(),
 						endEffectorPose.getX(), endEffectorPose.getY(), 0),
-						new Point3D(getFrame(), armBase.getX(), armBase
-								.getY(), 0)).getDistance();
+						new Point3D(getFrame(), armBase.getX(), armBase.getY(),
+								0)).getDistance();
 
 				double baseAngle = Math.atan2(x, z) - (midArmAngle / 2.0);
 
-				BASE_JOINT.setJointAngle( baseAngle);
-				CENTER_JOINT.setJointAngle( midArmAngle);
+				BASE_JOINT.setJointAngle(baseAngle);
+				CENTER_JOINT.setJointAngle(midArmAngle);
 
 			}
 

@@ -46,7 +46,8 @@ public class TestArmKinematics extends ArmKinematics
 		return new InvKinematics()
 		{
 
-			public void determine(Pose tipPose) throws IllegalJointAngleException
+			public void determine(Pose tipPose)
+					throws IllegalJointAngleException
 			{
 
 				// determine and set turret angle
@@ -58,7 +59,7 @@ public class TestArmKinematics extends ArmKinematics
 
 				double turretAngle = Math.atan2(x, y);
 
-				TURRET_JOINT.setJointAngle( turretAngle);
+				TURRET_JOINT.setJointAngle(turretAngle);
 				Vector3D armBase = getSegmentPose(BASE_JOINT).getTransform()
 						.getVector();
 
@@ -72,9 +73,14 @@ public class TestArmKinematics extends ArmKinematics
 				// armBase).getDistance();
 
 				// calculate angle of the bend in the arm to give the desired
-				// length, assuming the two links are of the same length.
-				double linkLength = 81.0;
-				double midArmAngle = Math.acos(((extend / 2.0) / linkLength)) * 2.0;
+				// length
+				double upperArm = ARM_SEGMENT1.getLinkLength();
+				double foreArm = ARM_SEGMENT2.getLinkLength();
+				double c = extend;
+				double midArmAngle = Math.PI
+						- Math.acos((upperArm * upperArm + foreArm * foreArm - c
+								* c)
+								/ (2 * upperArm * foreArm));
 
 				// midArmAngle -= Math.PI;
 
@@ -89,29 +95,34 @@ public class TestArmKinematics extends ArmKinematics
 
 				double baseAngle = Math.atan2(x, z) - (midArmAngle / 2.0);
 
-				BASE_JOINT.setJointAngle( baseAngle);
-				CENTER_JOINT.setJointAngle( midArmAngle);
+				BASE_JOINT.setJointAngle(baseAngle);
+				CENTER_JOINT.setJointAngle(midArmAngle);
 
 				double wristAngle = tipPose.getXAngle()
 						- getSegmentPose(WRIST_JOINT).getXAngle();
-				WRIST_JOINT.setJointAngle( wristAngle);
+				WRIST_JOINT.setJointAngle(wristAngle);
 
 			}
 
 			private Pose getEndEffectorPoseFromTipPose(Pose tipPose,
 					double turretAngle)
 			{
-				Vector3D tipVector = getLink(END_EFFECTOR).getTransform().getVector();
-				Rotation turretCorrectedRotation = new Rotation(RotationOrder.XYZ,
-						tipPose.getXAngle(), 0, turretAngle);
-				double[] angles = turretCorrectedRotation.getAngles(RotationOrder.XYZ);
-				
-				Vector3D turretCorrectedTipVector = turretCorrectedRotation.applyInverseTo(tipVector);
-				
-				Point3D rootOfEndEffector = tipPose.getTransform().subtract(turretCorrectedTipVector);
-				
-				Pose tipPose1 = new Pose(rootOfEndEffector.getPoint(), turretCorrectedRotation);
-				
+				Vector3D tipVector = getLink(END_EFFECTOR).getTransform()
+						.getVector();
+				Rotation turretCorrectedRotation = new Rotation(
+						RotationOrder.XYZ, tipPose.getXAngle(), 0, turretAngle);
+				double[] angles = turretCorrectedRotation
+						.getAngles(RotationOrder.XYZ);
+
+				Vector3D turretCorrectedTipVector = turretCorrectedRotation
+						.applyInverseTo(tipVector);
+
+				Point3D rootOfEndEffector = tipPose.getTransform().subtract(
+						turretCorrectedTipVector);
+
+				Pose tipPose1 = new Pose(rootOfEndEffector.getPoint(),
+						turretCorrectedRotation);
+
 				return tipPose1;
 			}
 

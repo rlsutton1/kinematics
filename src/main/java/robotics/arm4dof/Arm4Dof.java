@@ -76,11 +76,14 @@ public class Arm4Dof extends ArmKinematics
 				// armBase).getDistance();
 
 				// calculate angle of the bend in the arm to give the desired
-				// length, assuming the two links are of the same length.
-				double linkLength = 81.0;
-				double midArmAngle = Math.acos(((extend / 2.0) / linkLength)) * 2.0;
-
-				// midArmAngle -= Math.PI;
+				// length
+				double upperArm = ARM_SEGMENT1.getLinkLength();
+				double foreArm = ARM_SEGMENT2.getLinkLength();
+				double c = extend;
+				double midArmAngle = Math.PI
+						- Math.acos((upperArm * upperArm + foreArm * foreArm - c
+								* c)
+								/ (2 * upperArm * foreArm));
 
 				// calculate angle for armBase
 				// atan(changeInXY/changeInZ)

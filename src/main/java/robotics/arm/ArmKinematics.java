@@ -36,12 +36,19 @@ public abstract class ArmKinematics
 		// Link link;
 		Joint joint;
 
-		public void setJointAngle(double angle) throws IllegalJointAngleException
+		public double linkLength;
+
+		public void setJointAngle(double angle)
+				throws IllegalJointAngleException
 		{
 			if (joint == null)
 			{
 				throw new RuntimeException("This segment " + name
 						+ " is not a joint");
+			}
+			if (Double.isNaN(angle))
+			{
+				throw new RuntimeException("Angle is NaN");
 			}
 			joint.setAngle(angle);
 		}
@@ -55,7 +62,7 @@ public abstract class ArmKinematics
 			}
 			return joint.getAngle();
 		}
-		
+
 		public double getActuatorAngle()
 		{
 			if (joint == null)
@@ -71,6 +78,12 @@ public abstract class ArmKinematics
 		{
 			return name;
 		}
+		
+		public double getLinkLength()
+		{
+			return linkLength;
+		}
+
 	}
 
 	public ArmKinematics(Frame frame, Pose pose)
@@ -92,6 +105,8 @@ public abstract class ArmKinematics
 	{
 		Segment segment = new Segment();
 		segment.name = linkDef.getName();
+		segment.linkLength = new Vector3D(0,0,0).distance(new Vector3D(linkDef.getX(), linkDef.getY(),
+				linkDef.getZ()));
 		segments.put(segment, new Link(linkDef));
 		return segment;
 	}
@@ -101,6 +116,7 @@ public abstract class ArmKinematics
 	{
 		Segment segment = new Segment();
 		segment.name = name;
+		segment.linkLength = new Vector3D(0,0,0).distance(new Vector3D(x, y, z));
 		segments.put(segment, new Link(name, x, y, z, roll, pitch, yaw));
 		return segment;
 	}
@@ -110,6 +126,30 @@ public abstract class ArmKinematics
 		Segment segment = new Segment();
 		segment.name = jointDef.getName();
 		segments.put(segment, new Joint(jointDef));
+		segment.joint = (Joint) segments.get(segment);
+		return segment;
+	}
+
+	/**
+	 * a joint which the actuators angle is an offset against the angle of
+	 * another joint
+	 * 
+	 * @param jointDef
+	 * @param parentJoint
+	 * @param relativeAngle
+	 * @param minActuatorAngle
+	 * @param maxActuatorAnlge
+	 * @return
+	 */
+	public Segment addJointRelative(DefineJoint jointDef, Segment parentJoint,
+			double relativeAngle, double minActuatorAngle,
+			double maxActuatorAnlge)
+	{
+		Segment segment = new Segment();
+		segment.name = jointDef.getName();
+		segments.put(segment,
+				new JointRelative(jointDef, (Joint) segments.get(parentJoint),
+						relativeAngle, minActuatorAngle, maxActuatorAnlge));
 		segment.joint = (Joint) segments.get(segment);
 		return segment;
 	}
@@ -136,15 +176,15 @@ public abstract class ArmKinematics
 
 	}
 
-	/**
-	 * 
-	 * @param segment
-	 * @return angle of the joint in radians
-	 */
-	private double getComputedJointAngle(Segment segment)
-	{
-		return accessJoint(segment).getAngle();
-	}
+	// /**
+	// *
+	// * @param segment
+	// * @return angle of the joint in radians
+	// */
+	// private double getComputedJointAngle(Segment segment)
+	// {
+	// return accessJoint(segment).getAngle();
+	// }
 
 	/**
 	 * Returns a list of Links and joints up to and including the given Segment.
@@ -213,40 +253,40 @@ public abstract class ArmKinematics
 		return ret;
 	}
 
-	/**
-	 * 
-	 * @param segment
-	 * @param angleRadians
-	 * @throws IllegalJointAngleException
-	 */
-	private void setJointAngle(Segment segment, double angleRadians)
-			throws IllegalJointAngleException
-	{
-		Joint joint = accessJoint(segment);
-		
-		joint.setAngle(angleRadians);
-	}
+	// /**
+	// *
+	// * @param segment
+	// * @param angleRadians
+	// * @throws IllegalJointAngleException
+	// */
+	// private void setJointAngle(Segment segment, double angleRadians)
+	// throws IllegalJointAngleException
+	// {
+	// Joint joint = accessJoint(segment);
+	//
+	// joint.setAngle(angleRadians);
+	// }
 
 	public Pose getEndEffectorPose()
 	{
 		return getSegmentPose(null);
 	}
 
-	/**
-	 * ensure that we dont try to access a Link as a Joint
-	 * 
-	 * @param segment
-	 * @return
-	 */
-	private Joint accessJoint(Segment segment)
-	{
-		Link joint = segments.get(segment);
-		if (!(joint instanceof Joint))
-		{
-			throw new RuntimeException(segment + " is not a joint");
-		}
-		return (Joint) joint;
-	}
+	// /**
+	// * ensure that we dont try to access a Link as a Joint
+	// *
+	// * @param segment
+	// * @return
+	// */
+	// private Joint accessJoint(Segment segment)
+	// {
+	// Link joint = segments.get(segment);
+	// if (!(joint instanceof Joint))
+	// {
+	// throw new RuntimeException(segment + " is not a joint");
+	// }
+	// return (Joint) joint;
+	// }
 
 	public Link getLink(Segment segment)
 	{

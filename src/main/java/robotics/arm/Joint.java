@@ -37,6 +37,10 @@ class Joint extends Link
 	Joint(String name, Axis axis, double roll, double pitch, double yaw)
 	{
 		super(name, 0, 0, 0, roll, pitch, yaw);
+		if (axis == null)
+		{
+			throw new RuntimeException("Axis can not be null");
+		}
 		this.axis = axis;
 		this.angles = getRotation().getAngles(RotationOrder.XYZ);
 		currentAngle = 0;
@@ -47,6 +51,12 @@ class Joint extends Link
 		super(jointDef.getName(), 0, 0, 0, jointDef.getRoll(), jointDef
 				.getPitch(), jointDef.getYaw());
 		this.axis = jointDef.getAxis();
+
+		if (axis == null)
+		{
+			throw new RuntimeException("Axis can not be null");
+		}
+
 		this.angles = getRotation().getAngles(RotationOrder.XYZ);
 		minAngle = jointDef.getMinAngleRadians();
 		maxAngle = jointDef.getMaxAngleRadians();
@@ -81,7 +91,7 @@ class Joint extends Link
 		return minAngle;
 	}
 
-	public double getActuatorAngle() 
+	public double getActuatorAngle()
 	{
 		return getAngle();
 	}
@@ -97,14 +107,15 @@ class Joint extends Link
 		{
 			absoluteAngle += Math.PI * 2.0;
 		}
-		if (min != max && (min < absoluteAngle || max > absoluteAngle))
+		if (min != max && (min > absoluteAngle || max < absoluteAngle))
 		{
 
 			// try moving into correct quadrant before throwing exception
 
-			throw new IllegalJointAngleException(
-					"Attempt to set joint angle out of bounds " + absoluteAngle
-							+ " is not " + min + " < X < " + max);
+//			throw new IllegalJointAngleException(
+//					"Attempt to set joint angle for " + getName()
+//							+ " out of bounds " + absoluteAngle + " is not "
+//							+ min + " < X < " + max);
 		}
 		return absoluteAngle;
 	}
