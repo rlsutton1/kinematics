@@ -8,6 +8,7 @@ public class JointRelative extends Joint
 	private double parentAngleWhenSet;
 	private double actuatorMinAngle;
 	private double actuatorMaxAngle;
+	private double parentDirectionCorrection = -1;
 
 	/**
 	 * sometimes a joints angle is affected by another joint, such as when a
@@ -36,7 +37,7 @@ public class JointRelative extends Joint
 	void setAngle(double angle) throws IllegalJointAngleException
 	{
 
-		double absoluteAngle = super.getAngle() + parentJoint.getAngle()
+		double absoluteAngle = angle + (parentJoint.getAngle()*parentDirectionCorrection )
 				+ relativeAngleOffset;
 		checkJointAngle(absoluteAngle, actuatorMinAngle, actuatorMaxAngle);
 

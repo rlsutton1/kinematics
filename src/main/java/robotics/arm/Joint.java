@@ -112,10 +112,10 @@ class Joint extends Link
 
 			// try moving into correct quadrant before throwing exception
 
-//			throw new IllegalJointAngleException(
-//					"Attempt to set joint angle for " + getName()
-//							+ " out of bounds " + absoluteAngle + " is not "
-//							+ min + " < X < " + max);
+			throw new IllegalJointAngleException(
+					"Attempt to set joint angle for " + getName()
+							+ " out of bounds " + absoluteAngle + "("+Math.toDegrees(absoluteAngle)+") is not "
+							+ min +  "("+Math.toDegrees(min)+") < X < " + max+  "("+Math.toDegrees(max)+")");
 		}
 		return absoluteAngle;
 	}

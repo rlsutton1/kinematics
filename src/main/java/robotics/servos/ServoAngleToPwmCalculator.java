@@ -41,6 +41,12 @@ public class ServoAngleToPwmCalculator
 	}
 
 
+	public double getPwmValueDegrees(double angleX)
+	{
+		double pwm = (m * Math.toRadians(angleX)) + c;
+		return Math.max(min, Math.min(pwm, max));
+	}
+	
 	public double getPwmValue(double angleX)
 	{
 		double pwm = (m * angleX) + c;
